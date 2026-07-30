@@ -15,11 +15,18 @@ public interface WorkerReceivingSessionRepositoryJpa extends JpaRepository<Worke
             WorkerReceivingSessionStatus status);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    Optional<WorkerReceivingSessionJpa> findByWorkerIdAndStatus(
+    Optional<WorkerReceivingSessionJpa> findWithLockByWorkerIdAndStatus(
             UUID workerId,
-            WorkerReceivingSessionStatus inProcess);
+            WorkerReceivingSessionStatus status);
+
+
+    Optional<WorkerReceivingSessionJpa> findByWorkerId(UUID id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<WorkerReceivingSessionJpa> findWithLockByWorkerId(UUID id);
 
     boolean existsByReceiptIdAndStatus(
             UUID receiptId,
             WorkerReceivingSessionStatus workerReceivingSessionStatus);
+
 }

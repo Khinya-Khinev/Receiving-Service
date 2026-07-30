@@ -20,5 +20,7 @@ public interface WorkerReceivingSessionRepositoryPort {
 
     Set<WorkerReceivingSession> findAll();
 
-    Optional<WorkerReceivingSession> findById(UUID id);
+    Optional<WorkerReceivingSession> findByWorkerId(UUID id);
+
+    Optional<WorkerReceivingSession> findByWorkerIdWithLock(UUID id);
 }

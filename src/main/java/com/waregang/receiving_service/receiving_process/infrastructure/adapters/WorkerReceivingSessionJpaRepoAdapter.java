@@ -24,9 +24,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 
 @Repository
-@ConditionalOnProperty(
-        name = "app.adapters.worker-receiving-session-repository-adapter",
-        havingValue = "jpa")
 public class WorkerReceivingSessionJpaRepoAdapter implements WorkerReceivingSessionRepositoryPort {
     private final WorkerReceivingSessionRepositoryJpa repositoryJpa;
     private final WorkerReceivingSessionMapper mapper;
@@ -78,7 +75,7 @@ public class WorkerReceivingSessionJpaRepoAdapter implements WorkerReceivingSess
     @Override
     @Transactional
     public Optional<WorkerReceivingSession> findByWorkerIdAndStatus(UUID id, WorkerReceivingSessionStatus workerReceivingSessionStatus) {
-        return repositoryJpa.findByWorkerIdAndStatus(id, workerReceivingSessionStatus)
+        return repositoryJpa.findWithLockByWorkerIdAndStatus(id, workerReceivingSessionStatus)
                 .map(mapper::toDomain);
     }
 
@@ -90,8 +87,14 @@ public class WorkerReceivingSessionJpaRepoAdapter implements WorkerReceivingSess
     }
 
     @Override
-    public Optional<WorkerReceivingSession> findById(UUID id) {
-        return repositoryJpa.findById(id)
+    public Optional<WorkerReceivingSession> findByWorkerId(UUID id) {
+        return repositoryJpa.findByWorkerId(id)
+                .map(mapper::toDomain);
+    }
+
+    @Override
+    public Optional<WorkerReceivingSession> findByWorkerIdWithLock(UUID id) {
+        return repositoryJpa.findWithLockByWorkerId(id)
                 .map(mapper::toDomain);
     }
 

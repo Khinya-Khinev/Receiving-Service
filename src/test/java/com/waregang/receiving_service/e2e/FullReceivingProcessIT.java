@@ -110,9 +110,9 @@ public class FullReceivingProcessIT extends BaseIT {
         GoodsReceipt receipt = goodsReceiptRepositoryPort.findById(receiptId).orElseThrow();
         assertThat(receipt.getStatus()).isEqualTo(GoodsReceiptStatus.CLOSED);
 
-        Optional<WorkerReceivingSession> session = workerSessionRepositoryPort.findByWorkerIdAndStatus(worker.id(), WorkerReceivingSessionStatus.COMPLETED);
+        Optional<WorkerReceivingSession> session = workerSessionRepositoryPort.findByWorkerId(worker.id());
         assertThat(session).isPresent();
-
+        assertThat(session.get().getStatus()).isEqualTo(WorkerReceivingSessionStatus.COMPLETED);
 
         // Проверка сохранённых единиц и содержимого
         assertThat(updatedAsn.getHandlingUnits()).hasSize(1);
