@@ -2,7 +2,7 @@ package com.waregang.receiving_service.integration.putaway.application;
 
 import com.waregang.receiving_service.receiving_process.domain.event.WorkerSessionClosedEvent;
 import com.waregang.receiving_service.receiving_process.domain.model.ReceivedUnit;
-import com.waregang.receiving_service.receiving_process.domain.ports.ReceivedUnitRepositoryPort;
+import com.waregang.receiving_service.receiving_process.application.ports.ReceivedUnitRepositoryPort;
 import com.waregang.receiving_service.integration.putaway.infrastrusture.ForwardPutAwayRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

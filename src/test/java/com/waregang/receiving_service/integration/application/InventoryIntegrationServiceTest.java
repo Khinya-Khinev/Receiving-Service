@@ -6,7 +6,7 @@ import com.waregang.receiving_service.integration.putaway.application.PutAwayMap
 import com.waregang.receiving_service.integration.putaway.infrastrusture.ForwardPutAwayRequest;
 import com.waregang.receiving_service.receiving_process.domain.event.WorkerSessionClosedEvent;
 import com.waregang.receiving_service.receiving_process.domain.model.ReceivedUnit;
-import com.waregang.receiving_service.receiving_process.domain.ports.ReceivedUnitRepositoryPort;
+import com.waregang.receiving_service.receiving_process.application.ports.ReceivedUnitRepositoryPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

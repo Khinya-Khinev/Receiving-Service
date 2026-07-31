@@ -3,7 +3,7 @@ package com.waregang.receiving_service.receiving_process.infrastructure;
 import com.waregang.receiving_service.advanced_shipping_notice.application.AdvancedShippingNoticeService;
 import com.waregang.receiving_service.advanced_shipping_notice.domain.model.AdvancedShippingNoticeJpa;
 import com.waregang.receiving_service.receiving_process.domain.model.asn.AsnInfo;
-import com.waregang.receiving_service.receiving_process.domain.ports.AsnInfoProviderPort;
+import com.waregang.receiving_service.receiving_process.application.ports.AsnInfoProviderPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.waregang.receiving_service.receiving_process.domain.ports;
+package com.waregang.receiving_service.receiving_process.application.ports;
 
 import com.waregang.receiving_service.receiving_process.domain.model.asn.AsnInfo;
 

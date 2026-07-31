@@ -12,10 +12,10 @@ import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceip
 import com.waregang.receiving_service.receiving_process.domain.model.ReceivedUnit;
 import com.waregang.receiving_service.receiving_process.domain.model.WorkerReceivingSessionStatus;
 import com.waregang.receiving_service.receiving_process.domain.model.asn.AsnInfo;
-import com.waregang.receiving_service.receiving_process.domain.ports.AsnInfoProviderPort;
-import com.waregang.receiving_service.receiving_process.domain.ports.GoodsReceiptRepositoryPort;
-import com.waregang.receiving_service.receiving_process.domain.ports.ReceivedUnitRepositoryPort;
-import com.waregang.receiving_service.receiving_process.domain.ports.WorkerReceivingSessionRepositoryPort;
+import com.waregang.receiving_service.receiving_process.application.ports.AsnInfoProviderPort;
+import com.waregang.receiving_service.receiving_process.application.ports.GoodsReceiptRepositoryPort;
+import com.waregang.receiving_service.receiving_process.application.ports.ReceivedUnitRepositoryPort;
+import com.waregang.receiving_service.receiving_process.application.ports.WorkerReceivingSessionRepositoryPort;
 import com.waregang.receiving_service.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

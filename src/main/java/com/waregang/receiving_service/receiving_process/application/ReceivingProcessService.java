@@ -6,10 +6,10 @@ import com.waregang.receiving_service.common.exception_handling.error_code.Recei
 import com.waregang.receiving_service.receiving_process.api.dto.*;
 import com.waregang.receiving_service.receiving_process.domain.model.*;
 import com.waregang.receiving_service.receiving_process.domain.model.asn.AsnInfo;
-import com.waregang.receiving_service.receiving_process.domain.ports.AsnInfoProviderPort;
-import com.waregang.receiving_service.receiving_process.domain.ports.ReceivedContentRepositoryPort;
-import com.waregang.receiving_service.receiving_process.domain.ports.ReceivedUnitRepositoryPort;
-import com.waregang.receiving_service.receiving_process.domain.ports.WorkerReceivingSessionRepositoryPort;
+import com.waregang.receiving_service.receiving_process.application.ports.AsnInfoProviderPort;
+import com.waregang.receiving_service.receiving_process.application.ports.ReceivedContentRepositoryPort;
+import com.waregang.receiving_service.receiving_process.application.ports.ReceivedUnitRepositoryPort;
+import com.waregang.receiving_service.receiving_process.application.ports.WorkerReceivingSessionRepositoryPort;
 import com.waregang.receiving_service.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

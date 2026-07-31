@@ -5,7 +5,7 @@ import com.waregang.receiving_service.common.exception_handling.DatabaseExceptio
 import com.waregang.receiving_service.common.exception_handling.error_code.ReceivingErrorCode;
 import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceipt;
 import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceiptStatus;
-import com.waregang.receiving_service.receiving_process.domain.ports.GoodsReceiptRepositoryPort;
+import com.waregang.receiving_service.receiving_process.application.ports.GoodsReceiptRepositoryPort;
 import com.waregang.receiving_service.receiving_process.domain.dto.GoodsReceiptDto;
 import com.waregang.receiving_service.receiving_process.infrastructure.jpa_entities.GoodsReceiptJpa;
 import com.waregang.receiving_service.receiving_process.infrastructure.jpa_repositories.GoodsReceiptRepositoryJpa;

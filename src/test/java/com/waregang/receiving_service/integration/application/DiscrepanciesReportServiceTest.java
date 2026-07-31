@@ -5,7 +5,7 @@ import com.waregang.receiving_service.integration.discrepancies_report.applicati
 import com.waregang.receiving_service.integration.discrepancies_report.application.DiscrepanciesReportService;
 import com.waregang.receiving_service.SkuQuantityDto;
 import com.waregang.receiving_service.receiving_process.domain.event.ClosedGoodsReceiptEvent;
-import com.waregang.receiving_service.receiving_process.domain.ports.ReceivedContentRepositoryPort;
+import com.waregang.receiving_service.receiving_process.application.ports.ReceivedContentRepositoryPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

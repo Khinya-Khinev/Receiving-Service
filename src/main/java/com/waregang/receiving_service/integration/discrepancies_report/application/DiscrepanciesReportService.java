@@ -3,7 +3,7 @@ package com.waregang.receiving_service.integration.discrepancies_report.applicat
 import com.waregang.receiving_service.advanced_shipping_notice.infrastructure.jpa_repositories.AdvancedShippingNoticeRepositoryJpa;
 import com.waregang.receiving_service.SkuQuantityDto;
 import com.waregang.receiving_service.receiving_process.domain.event.ClosedGoodsReceiptEvent;
-import com.waregang.receiving_service.receiving_process.domain.ports.ReceivedContentRepositoryPort;
+import com.waregang.receiving_service.receiving_process.application.ports.ReceivedContentRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

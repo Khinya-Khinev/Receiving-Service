@@ -4,9 +4,9 @@ import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingRe
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingResponse;
 import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceipt;
 import com.waregang.receiving_service.receiving_process.domain.model.asn.AsnInfo;
-import com.waregang.receiving_service.receiving_process.domain.ports.AsnInfoProviderPort;
-import com.waregang.receiving_service.receiving_process.domain.ports.GoodsReceiptRepositoryPort;
-import com.waregang.receiving_service.receiving_process.domain.ports.WorkerReceivingSessionRepositoryPort;
+import com.waregang.receiving_service.receiving_process.application.ports.AsnInfoProviderPort;
+import com.waregang.receiving_service.receiving_process.application.ports.GoodsReceiptRepositoryPort;
+import com.waregang.receiving_service.receiving_process.application.ports.WorkerReceivingSessionRepositoryPort;
 import com.waregang.receiving_service.security.UserPrincipal;
 import com.waregang.receiving_service.test_utils.mothers.UserPrincipalMother;
 import org.junit.jupiter.api.BeforeEach;
