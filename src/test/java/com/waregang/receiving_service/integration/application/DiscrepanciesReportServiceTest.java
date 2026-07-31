@@ -3,7 +3,7 @@ package com.waregang.receiving_service.integration.application;
 import com.waregang.receiving_service.advanced_shipping_notice.infrastructure.jpa_repositories.AdvancedShippingNoticeRepositoryJpa;
 import com.waregang.receiving_service.integration.discrepancies_report.application.DiscrepanciesReportPort;
 import com.waregang.receiving_service.integration.discrepancies_report.application.DiscrepanciesReportService;
-import com.waregang.receiving_service.SkuQuantityDto;
+import com.waregang.receiving_service.common.SkuQuantityDto;
 import com.waregang.receiving_service.receiving_process.domain.event.ClosedGoodsReceiptEvent;
 import com.waregang.receiving_service.receiving_process.application.ports.ReceivedContentRepositoryPort;
 import org.junit.jupiter.api.DisplayName;
