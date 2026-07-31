@@ -1,6 +1,6 @@
 package com.waregang.receiving_service.receiving_process.infrastructure.jpa_repositories;
 
-import com.waregang.receiving_service.common.SkuQuantityDto;
+import com.waregang.receiving_service.SkuQuantityDto;
 import com.waregang.receiving_service.receiving_process.infrastructure.jpa_entities.ReceivedContentJpa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

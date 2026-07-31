@@ -1,11 +1,10 @@
 package com.waregang.receiving_service.receiving_process.application;
 
-import com.waregang.receiving_service.advanced_shipping_notice.application.AdvancedShippingNoticeService;
-import com.waregang.receiving_service.advanced_shipping_notice.domain.model.AdvancedShippingNoticeJpa;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingRequest;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingResponse;
 import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceipt;
-import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceiptStatus;
+import com.waregang.receiving_service.receiving_process.domain.model.asn.AsnInfo;
+import com.waregang.receiving_service.receiving_process.domain.ports.AsnInfoProviderPort;
 import com.waregang.receiving_service.receiving_process.domain.ports.GoodsReceiptRepositoryPort;
 import com.waregang.receiving_service.receiving_process.domain.ports.WorkerReceivingSessionRepositoryPort;
 import com.waregang.receiving_service.security.UserPrincipal;
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class GoodsReceiptServiceTest {
 
-    @Mock private AdvancedShippingNoticeService asnService;
+    @Mock private AsnInfoProviderPort asnInfoProvider;
     @Mock private GoodsReceiptRepositoryPort goodsReceiptRepositoryPort;
     @Mock private WorkerReceivingSessionRepositoryPort workerSessionRepository;
 
@@ -47,14 +46,14 @@ class GoodsReceiptServiceTest {
         String asnNumber = "ASN-123";
         StartReceivingRequest request = new StartReceivingRequest(asnNumber, "GATE-01");
         
-        AdvancedShippingNoticeJpa asn = mock(AdvancedShippingNoticeJpa.class);
+        AsnInfo asnInfo = new AsnInfo(
+                UUID.randomUUID(),
+                "WH-001",
+                com.waregang.receiving_service.receiving_process.domain.model.ReceivingMode.ASN_MATCHING,
+                asnNumber
+        );
 
-        when(asn.getId()).thenReturn(UUID.randomUUID());
-        when(asn.getWarehouseId()).thenReturn("WH-001");
-        when(asn.getReceivingMode()).thenReturn(com.waregang.receiving_service.receiving_process.domain.model.ReceivingMode.ASN_MATCHING);
-        when(asn.getAsnNumber()).thenReturn(asnNumber);
-
-        when(asnService.findByAsn(asnNumber)).thenReturn(asn);
+        when(asnInfoProvider.findAndMarkAsArrived(asnNumber, manager.warehouseId())).thenReturn(asnInfo);
 
         // Act
         StartReceivingResponse response = goodsReceiptService.startReceiving(request, manager);

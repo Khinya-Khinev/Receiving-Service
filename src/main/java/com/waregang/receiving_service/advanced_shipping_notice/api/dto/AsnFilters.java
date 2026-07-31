@@ -1,4 +1,4 @@
-package com.waregang.receiving_service.receiving_process.api.dto;
+package com.waregang.receiving_service.advanced_shipping_notice.api.dto;
 
 import com.waregang.receiving_service.advanced_shipping_notice.domain.model.AdvancedShippingNoticeStatus;
 

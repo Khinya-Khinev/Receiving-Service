@@ -6,9 +6,8 @@ import com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateAsn
 import com.waregang.receiving_service.advanced_shipping_notice.application.AdvancedShippingNoticeMapper;
 import com.waregang.receiving_service.advanced_shipping_notice.application.AdvancedShippingNoticeService;
 import com.waregang.receiving_service.advanced_shipping_notice.domain.model.AdvancedShippingNoticeStatus;
-import com.waregang.receiving_service.receiving_process.api.dto.AsnFilters;
-import com.waregang.receiving_service.receiving_process.api.dto.AsnResponse;
-import com.waregang.receiving_service.receiving_process.api.dto.GetAsnsResponse;
+import com.waregang.receiving_service.advanced_shipping_notice.api.dto.AsnFilters;
+import com.waregang.receiving_service.advanced_shipping_notice.api.dto.AsnResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor

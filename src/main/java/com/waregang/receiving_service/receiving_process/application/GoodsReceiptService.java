@@ -1,23 +1,21 @@
 package com.waregang.receiving_service.receiving_process.application;
 
-import com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateContentRequest;
-import com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateUnitRequest;
 import com.waregang.receiving_service.common.exception_handling.AppException;
 import com.waregang.receiving_service.common.exception_handling.error_code.ReceivingErrorCode;
-import com.waregang.receiving_service.advanced_shipping_notice.application.AdvancedShippingNoticeService;
-import com.waregang.receiving_service.advanced_shipping_notice.domain.model.AdvancedShippingNoticeJpa;
 import com.waregang.receiving_service.receiving_process.api.dto.GetOpenedReceiptsResponse;
 import com.waregang.receiving_service.receiving_process.api.dto.GoodsReceiptDetailsResponse;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingRequest;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingResponse;
+import com.waregang.receiving_service.receiving_process.domain.dto.GoodsReceiptDto;
 import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceipt;
 import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceiptStatus;
 import com.waregang.receiving_service.receiving_process.domain.model.ReceivedUnit;
 import com.waregang.receiving_service.receiving_process.domain.model.WorkerReceivingSessionStatus;
+import com.waregang.receiving_service.receiving_process.domain.model.asn.AsnInfo;
+import com.waregang.receiving_service.receiving_process.domain.ports.AsnInfoProviderPort;
 import com.waregang.receiving_service.receiving_process.domain.ports.GoodsReceiptRepositoryPort;
 import com.waregang.receiving_service.receiving_process.domain.ports.ReceivedUnitRepositoryPort;
 import com.waregang.receiving_service.receiving_process.domain.ports.WorkerReceivingSessionRepositoryPort;
-import com.waregang.receiving_service.receiving_process.domain.dto.GoodsReceiptDto;
 import com.waregang.receiving_service.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,35 +28,33 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class GoodsReceiptService {
-    private final AdvancedShippingNoticeService asnService;
+    private final AsnInfoProviderPort asnInfoProvider;
 
     private final GoodsReceiptRepositoryPort goodsReceiptRepositoryPort;
 
     private final WorkerReceivingSessionRepositoryPort workerSessionRepository;
     private final ReceivedUnitRepositoryPort receivedUnitRepositoryPort;
 
-    // TODO:  mb add retryable later
     @Transactional
     public StartReceivingResponse startReceiving(
             StartReceivingRequest request,
             UserPrincipal manager
     ) {
-        AdvancedShippingNoticeJpa asn = asnService.findByAsn(request.asnNumber());
-        asnService.markAsArrived(asn, manager.warehouseId());
+        AsnInfo asn = asnInfoProvider.findAndMarkAsArrived(request.asnNumber(), manager.warehouseId());
 
         GoodsReceipt receipt = GoodsReceipt.open(
                 manager.id(),
                 manager.nickname(),
-                asn.getId(),
-                asn.getWarehouseId(),
-                asn.getReceivingMode(),
-                asn.getAsnNumber(),
+                asn.id(),
+                asn.warehouseId(),
+                asn.receivingMode(),
+                asn.asnNumber(),
                 request.gateNumber()
         );
 
         goodsReceiptRepositoryPort.save(receipt);
 
-        return new StartReceivingResponse(receipt.getId(), asn.getReceivingMode());
+        return new StartReceivingResponse(receipt.getId(), asn.receivingMode());
     }
 
     @Transactional
@@ -74,8 +70,6 @@ public class GoodsReceiptService {
                     .with("receipt_id", receiptId);
         }
 
-        // GoodsReceipt is a point of synchronization for itself and WorkerReceivingSession:
-        // checking worker receiving session without locks because its creation is locked on GoodsReceipt as well
         if (workerSessionRepository.existsByReceiptIdAndStatus(
                 receiptId,
                 WorkerReceivingSessionStatus.IN_PROCESS
@@ -84,7 +78,7 @@ public class GoodsReceiptService {
                     .with("receipt_id", receiptId)
                     .with("reason", "some workers joined receipt");
         }
-        asnService.closeAsn(receipt.getInboundDeliveryId());
+        asnInfoProvider.closeAsn(receipt.getInboundDeliveryId());
         receipt.close();
 
         goodsReceiptRepositoryPort.update(receipt);
@@ -106,17 +100,19 @@ public class GoodsReceiptService {
 
         List<ReceivedUnit> units = receivedUnitRepositoryPort.findAllByReceiptId(receiptId);
 
-        List<CreateUnitRequest> unitRequests = units.stream()
-                .map(unit -> new CreateUnitRequest(
+        // The DTOs from the other context are still used here.
+        // I will leave them for now as requested.
+        List<com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateUnitRequest> unitRequests = units.stream()
+                .map(unit -> new com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateUnitRequest(
                         "DEFAULT",
                         unit.getLpn(),
                         unit.getParentUnitId() != null ? findLpnById(unit.getParentUnitId(), units) : null
                 ))
                 .toList();
 
-        List<CreateContentRequest> contentRequests = units.stream()
+        List<com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateContentRequest> contentRequests = units.stream()
                 .flatMap(unit -> unit.getContents().stream())
-                .map(content -> new CreateContentRequest(
+                .map(content -> new com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateContentRequest(
                         findLpnById(content.getContainerUnitId(), units),
                         content.getSku(),
                         content.getQuantity()

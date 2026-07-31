@@ -1,6 +1,6 @@
 package com.waregang.receiving_service.receiving_process.domain.ports;
 
-import com.waregang.receiving_service.common.SkuQuantityDto;
+import com.waregang.receiving_service.SkuQuantityDto;
 import com.waregang.receiving_service.receiving_process.domain.model.ReceivedContent;
 
 import java.util.List;

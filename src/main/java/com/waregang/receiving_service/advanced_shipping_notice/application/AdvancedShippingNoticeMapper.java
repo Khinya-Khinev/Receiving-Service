@@ -5,7 +5,7 @@ import com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateCon
 import com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateUnitRequest;
 import com.waregang.receiving_service.advanced_shipping_notice.domain.model.HandlingUnitJpa;
 import com.waregang.receiving_service.advanced_shipping_notice.domain.model.AdvancedShippingNoticeJpa;
-import com.waregang.receiving_service.receiving_process.api.dto.AsnResponse;
+import com.waregang.receiving_service.advanced_shipping_notice.api.dto.AsnResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

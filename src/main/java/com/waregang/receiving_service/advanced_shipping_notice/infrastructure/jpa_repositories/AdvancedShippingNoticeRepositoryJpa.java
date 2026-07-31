@@ -2,7 +2,7 @@ package com.waregang.receiving_service.advanced_shipping_notice.infrastructure.j
 
 import com.waregang.receiving_service.advanced_shipping_notice.domain.model.AdvancedShippingNoticeJpa;
 import com.waregang.receiving_service.advanced_shipping_notice.domain.model.AdvancedShippingNoticeStatus;
-import com.waregang.receiving_service.common.SkuQuantityDto;
+import com.waregang.receiving_service.SkuQuantityDto;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,11 +1,11 @@
 package com.waregang.receiving_service.receiving_process.application;
 
-import com.waregang.receiving_service.advanced_shipping_notice.application.AdvancedShippingNoticeService;
-import com.waregang.receiving_service.advanced_shipping_notice.domain.model.AdvancedShippingNoticeJpa;
 import com.waregang.receiving_service.receiving_process.api.dto.JoinReceivingResponse;
-import com.waregang.receiving_service.receiving_process.api.dto.ScanHandlingUnitRequest;
-import com.waregang.receiving_service.receiving_process.api.dto.ScanHandlingUnitResponse;
-import com.waregang.receiving_service.receiving_process.domain.model.*;
+import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceipt;
+import com.waregang.receiving_service.receiving_process.domain.model.ReceivingMode;
+import com.waregang.receiving_service.receiving_process.domain.model.WorkerReceivingSession;
+import com.waregang.receiving_service.receiving_process.domain.model.asn.AsnInfo;
+import com.waregang.receiving_service.receiving_process.domain.ports.AsnInfoProviderPort;
 import com.waregang.receiving_service.receiving_process.domain.ports.ReceivedContentRepositoryPort;
 import com.waregang.receiving_service.receiving_process.domain.ports.ReceivedUnitRepositoryPort;
 import com.waregang.receiving_service.receiving_process.domain.ports.WorkerReceivingSessionRepositoryPort;
@@ -32,7 +32,7 @@ class ReceivingProcessServiceTest {
     @Mock private ReceivedUnitRepositoryPort receivedUnitRepository;
     @Mock private ReceivedContentRepositoryPort receivedContentRepository;
     @Mock private GoodsReceiptService goodsReceiptService;
-    @Mock private AdvancedShippingNoticeService asnService;
+    @Mock private AsnInfoProviderPort asnInfoProvider;
 
     @InjectMocks private ReceivingProcessService receivingProcessService;
 
@@ -55,13 +55,14 @@ class ReceivingProcessServiceTest {
         when(goodsReceiptService.findReceiptByIdWithLock(receiptId))
                 .thenReturn(receipt);
         
-        AdvancedShippingNoticeJpa asn = mock(AdvancedShippingNoticeJpa.class);
-        when(asnService.findById(any()))
-                .thenReturn(asn);
-        when(asn.getReceivingMode())
-                .thenReturn(ReceivingMode.ASN_MATCHING);
-        when(asn.getId())
-                .thenReturn(UUID.randomUUID());
+        AsnInfo asnInfo = new AsnInfo(
+                UUID.randomUUID(),
+                "WH-001",
+                ReceivingMode.ASN_MATCHING,
+                "ASN-123"
+        );
+        when(asnInfoProvider.getAsnInfoById(any()))
+                .thenReturn(asnInfo);
 
         when(workerSessionRepository.save(any()))
                 .thenAnswer(invocation -> invocation.getArgument(0));

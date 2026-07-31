@@ -3,10 +3,10 @@ package com.waregang.receiving_service.receiving_process.application;
 import com.waregang.receiving_service.common.exception_handling.AppException;
 import com.waregang.receiving_service.common.exception_handling.error_code.AsnErrorCode;
 import com.waregang.receiving_service.common.exception_handling.error_code.ReceivingErrorCode;
-import com.waregang.receiving_service.advanced_shipping_notice.application.AdvancedShippingNoticeService;
-import com.waregang.receiving_service.advanced_shipping_notice.domain.model.AdvancedShippingNoticeJpa;
 import com.waregang.receiving_service.receiving_process.api.dto.*;
 import com.waregang.receiving_service.receiving_process.domain.model.*;
+import com.waregang.receiving_service.receiving_process.domain.model.asn.AsnInfo;
+import com.waregang.receiving_service.receiving_process.domain.ports.AsnInfoProviderPort;
 import com.waregang.receiving_service.receiving_process.domain.ports.ReceivedContentRepositoryPort;
 import com.waregang.receiving_service.receiving_process.domain.ports.ReceivedUnitRepositoryPort;
 import com.waregang.receiving_service.receiving_process.domain.ports.WorkerReceivingSessionRepositoryPort;
@@ -26,7 +26,7 @@ public class ReceivingProcessService {
     private final ReceivedContentRepositoryPort receivedContentRepository;
 
     private final GoodsReceiptService goodsReceiptService;
-    private final AdvancedShippingNoticeService asnService;
+    private final AsnInfoProviderPort asnInfoProvider;
 
     @Transactional
     public JoinReceivingResponse joinReceiving(UserPrincipal worker, UUID receiptId) {
@@ -36,13 +36,13 @@ public class ReceivingProcessService {
         GoodsReceipt receipt = goodsReceiptService.findReceiptByIdWithLock(receiptId);
         receipt.ensureAvailableForJoin(worker);
 
-        AdvancedShippingNoticeJpa asn = asnService.findById(receipt.getInboundDeliveryId());
+        AsnInfo asn = asnInfoProvider.getAsnInfoById(receipt.getInboundDeliveryId());
 
         var newSession = WorkerReceivingSession.createWithBundledWorker(
                 worker,
                 receipt.getId(),
-                asn.getReceivingMode(),
-                asn.getId()
+                asn.receivingMode(),
+                asn.id()
         );
 
         WorkerReceivingSession savedSession = workerSessionRepository.save(newSession);
@@ -121,7 +121,7 @@ public class ReceivingProcessService {
         try {
             WorkerReceivingSession workerSession = findActiveSessionByWorkerId(worker.id());
 
-            asnService.validateScannedHuAgainstAsn(lpn, workerSession.getInboundDeliveryId());
+            asnInfoProvider.validateScannedHuAgainstAsn(lpn, workerSession.getInboundDeliveryId());
 
             return new LpnInAsnResponse(lpn, true);
 
@@ -138,7 +138,7 @@ public class ReceivingProcessService {
         try {
             WorkerReceivingSession workerSession = findActiveSessionByWorkerId(worker.id());
 
-            asnService.validateScannedContentAgainstAsn(sku, workerSession.getInboundDeliveryId());
+            asnInfoProvider.validateScannedContentAgainstAsn(sku, workerSession.getInboundDeliveryId());
 
             return new SkuInAsnResponse(sku, true);
 

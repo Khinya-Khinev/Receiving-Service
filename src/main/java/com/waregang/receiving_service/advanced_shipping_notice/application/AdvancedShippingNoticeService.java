@@ -8,13 +8,11 @@ import com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateAsn
 import com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateContentRequest;
 import com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateUnitRequest;
 import com.waregang.receiving_service.advanced_shipping_notice.domain.model.AdvancedShippingNoticeJpa;
-import com.waregang.receiving_service.advanced_shipping_notice.domain.model.ContentJpa;
-import com.waregang.receiving_service.advanced_shipping_notice.domain.model.HandlingUnitJpa;
 import com.waregang.receiving_service.advanced_shipping_notice.infrastructure.jpa_repositories.AdvancedShippingNoticeRepositoryJpa;
 import com.waregang.receiving_service.advanced_shipping_notice.infrastructure.jpa_repositories.ContentRepositoryJpa;
 import com.waregang.receiving_service.advanced_shipping_notice.infrastructure.jpa_repositories.HandlingUnitRepositoryJpa;
-import com.waregang.receiving_service.receiving_process.api.dto.AsnFilters;
-import com.waregang.receiving_service.receiving_process.api.dto.AsnResponse;
+import com.waregang.receiving_service.advanced_shipping_notice.api.dto.AsnFilters;
+import com.waregang.receiving_service.advanced_shipping_notice.api.dto.AsnResponse;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
