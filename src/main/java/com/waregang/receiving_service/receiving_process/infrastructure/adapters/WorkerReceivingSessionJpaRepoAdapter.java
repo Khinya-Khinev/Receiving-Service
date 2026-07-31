@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class WorkerReceivingSessionJpaRepoAdapter implements WorkerReceivingSessionRepositoryPort {
     private final WorkerReceivingSessionRepositoryJpa repositoryJpa;
     private final WorkerReceivingSessionMapper mapper;
-    private final ApplicationEventPublisher eventPublisher;
+
     private final DatabaseExceptionTranslator databaseExceptionTranslator;
 
     @Override
@@ -44,7 +44,7 @@ public class WorkerReceivingSessionJpaRepoAdapter implements WorkerReceivingSess
         try {
             WorkerReceivingSessionJpa saved = repositoryJpa.save(mapper.toJpa(session));
             repositoryJpa.flush();
-            session.pullDomainEvents().forEach(eventPublisher::publishEvent);
+
             return mapper.toDomain(saved);
         } catch (DataIntegrityViolationException e) {
             throw databaseExceptionTranslator.translate(e);
@@ -62,8 +62,6 @@ public class WorkerReceivingSessionJpaRepoAdapter implements WorkerReceivingSess
             mapper.updateJpaFromDomain(sessionJpa, session);
 
             repositoryJpa.flush();
-
-            session.pullDomainEvents().forEach(eventPublisher::publishEvent);
 
             return mapper.toDomain(sessionJpa);
         } catch (DataIntegrityViolationException e) {

@@ -26,15 +26,12 @@ public class GoodsReceiptJpaRepoAdapter implements GoodsReceiptRepositoryPort {
     private final GoodsReceiptRepositoryJpa repositoryJpa;
 
     private final GoodsReceiptMapper mapper;
-    private final ApplicationEventPublisher eventPublisher;
     private final DatabaseExceptionTranslator databaseExceptionTranslator;
 
     @Override
     public GoodsReceipt save(GoodsReceipt receipt) {
         try {
             GoodsReceiptJpa saved = repositoryJpa.save(mapper.toJpa(receipt));
-
-            receipt.pullDomainEvents().forEach(eventPublisher::publishEvent);
 
             return mapper.toDomain(saved);
         } catch (DataIntegrityViolationException e) {
@@ -50,8 +47,6 @@ public class GoodsReceiptJpaRepoAdapter implements GoodsReceiptRepositoryPort {
                             .with("receipt_id", receipt.getId()));
 
             mapper.updateJpaFromDomain(receiptJpa, receipt);
-
-            receipt.pullDomainEvents().forEach(eventPublisher::publishEvent);
 
             return mapper.toDomain(receiptJpa);
         } catch (DataIntegrityViolationException e) {

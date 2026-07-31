@@ -18,6 +18,7 @@ import com.waregang.receiving_service.receiving_process.application.ports.Receiv
 import com.waregang.receiving_service.receiving_process.application.ports.WorkerReceivingSessionRepositoryPort;
 import com.waregang.receiving_service.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class GoodsReceiptService {
+
+    private final ApplicationEventPublisher eventPublisher;
+
     private final AsnInfoProviderPort asnInfoProvider;
 
     private final GoodsReceiptRepositoryPort goodsReceiptRepositoryPort;
@@ -53,6 +57,8 @@ public class GoodsReceiptService {
         );
 
         goodsReceiptRepositoryPort.save(receipt);
+
+        receipt.pullDomainEvents().forEach(eventPublisher::publishEvent);
 
         return new StartReceivingResponse(receipt.getId(), asn.receivingMode());
     }
@@ -82,6 +88,8 @@ public class GoodsReceiptService {
         receipt.close();
 
         goodsReceiptRepositoryPort.update(receipt);
+
+        receipt.pullDomainEvents().forEach(eventPublisher::publishEvent);
     }
 
     @Transactional(readOnly = true)

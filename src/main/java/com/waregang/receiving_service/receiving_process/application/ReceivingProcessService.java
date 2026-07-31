@@ -12,6 +12,7 @@ import com.waregang.receiving_service.receiving_process.application.ports.Receiv
 import com.waregang.receiving_service.receiving_process.application.ports.WorkerReceivingSessionRepositoryPort;
 import com.waregang.receiving_service.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class ReceivingProcessService {
+
+    private final ApplicationEventPublisher eventPublisher;
 
     private final WorkerReceivingSessionRepositoryPort workerSessionRepository;
     private final ReceivedUnitRepositoryPort receivedUnitRepository;
@@ -114,6 +117,8 @@ public class ReceivingProcessService {
         session.complete();
 
         workerSessionRepository.update(session);
+
+        session.pullDomainEvents().forEach(eventPublisher::publishEvent);
     }
 
     @Transactional(readOnly = true)
