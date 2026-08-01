@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.UUID;
 
@@ -29,6 +30,7 @@ class GoodsReceiptServiceTest {
     @Mock private AsnInfoProviderPort asnInfoProvider;
     @Mock private GoodsReceiptRepositoryPort goodsReceiptRepositoryPort;
     @Mock private WorkerReceivingSessionRepositoryPort workerSessionRepository;
+    @Mock private ApplicationEventPublisher eventPublisher;
 
     @InjectMocks private GoodsReceiptService goodsReceiptService;
 

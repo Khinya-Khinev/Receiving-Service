@@ -11,7 +11,7 @@
 
     <groupId>com.waregang</groupId>
     <artifactId>receiving-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>receiving-service</name>
 
     <properties>
