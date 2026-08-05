@@ -11,6 +11,7 @@ import com.waregang.receiving_service.receiving_process.infrastructure.jpa_repos
 import com.waregang.receiving_service.receiving_process.infrastructure.mappers.WorkerReceivingSessionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,8 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 
-@Repository
+@Primary
+@Repository("workerReceivingSessionJpaRepoAdapter")
 public class WorkerReceivingSessionJpaRepoAdapter implements WorkerReceivingSessionRepositoryPort {
     private final WorkerReceivingSessionRepositoryJpa repositoryJpa;
     private final WorkerReceivingSessionMapper mapper;

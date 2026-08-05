@@ -12,6 +12,7 @@ import com.waregang.receiving_service.receiving_process.application.ports.Receiv
 import com.waregang.receiving_service.receiving_process.application.ports.WorkerReceivingSessionRepositoryPort;
 import com.waregang.receiving_service.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ public class ReceivingProcessService {
 
     private final ApplicationEventPublisher eventPublisher;
 
+    @Qualifier("workerReceivingSessionJpaRepoAdapter")
     private final WorkerReceivingSessionRepositoryPort workerSessionRepository;
     private final ReceivedUnitRepositoryPort receivedUnitRepository;
     private final ReceivedContentRepositoryPort receivedContentRepository;
