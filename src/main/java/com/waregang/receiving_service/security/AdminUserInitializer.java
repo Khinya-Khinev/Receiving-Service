@@ -21,12 +21,12 @@ public class AdminUserInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (userRepository.findByEmail("manager@warehouse.com").isEmpty()) {
+        if (userRepository.findByEmail("string@example.com").isEmpty()) {
             var request = new RegisterUserRequest(
-                    "boss_manager",
-                    "WH-CENTRAL",
-                    "manager@warehouse.com",
-                    "password123"
+                    "string",
+                    "WH-ID",
+                    "string@example.com",
+                    "string"
             );
 
             User manager = User.createWorker(request, passwordEncoder.encode(request.password()));
@@ -34,7 +34,8 @@ public class AdminUserInitializer implements CommandLineRunner {
             manager.setAuthority(Authority.BOX_MANAGER);
 
             userRepository.save(manager);
-            log.info(">>>> Created default BOX_MANAGER user: manager@warehouse.com <<<<");
+            log.info(">>>> Created default BOX_MANAGER user: string@example.com <<<<");
+            log.info(">>>> Created default BOX_MANAGER password: string <<<<");
         }
     }
 }
