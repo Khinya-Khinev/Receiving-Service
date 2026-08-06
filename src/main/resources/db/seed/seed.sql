@@ -1,0 +1,101 @@
+-- =============================================
+-- Seed data for all tables
+-- =============================================
+
+-- =============================================
+-- 1. USERS
+-- =============================================
+INSERT INTO users (id, email, nickname, password, authority, warehouse_id) VALUES
+                                                                               ('11111111-1111-1111-1111-111111111111', 'cat.manager@warehouse.com', 'Barsik', 'encoded_password_123', 'MANAGER', 'WH-001'),
+                                                                               ('22222222-2222-2222-2222-222222222222', 'cat.worker1@warehouse.com', 'Murzik', 'encoded_password_123', 'WORKER', 'WH-001'),
+                                                                               ('33333333-3333-3333-3333-333333333333', 'cat.worker2@warehouse.com', 'Vaska', 'encoded_password_123', 'WORKER', 'WH-001'),
+                                                                               ('44444444-4444-4444-4444-444444444444', 'cat.worker3@warehouse.com', 'Tishka', 'encoded_password_123', 'WORKER', 'WH-002'),
+                                                                               ('55555555-5555-5555-5555-555555555555', 'cat.manager2@warehouse.com', 'Ryzhik', 'encoded_password_123', 'MANAGER', 'WH-002');
+
+-- =============================================
+-- 2. ASN (Inbound Deliveries)
+-- =============================================
+INSERT INTO asn (id, version, asn_number, external_id, warehouse_id, receiving_mode, status, vendor_name, expected_arrival_date, actual_arrival_date) VALUES
+                                                                                                                                                          ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 0, 'ASN-2026-001', 'EXT-001', 'WH-001', 'ASN_MATCHING', 'ARRIVED', 'Острый Коготь Ltd', '2026-08-01 10:00:00', '2026-08-06 09:30:00'),
+                                                                                                                                                          ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 0, 'ASN-2026-002', 'EXT-002', 'WH-001', 'ASN_MATCHING', 'EXPECTED', 'Длинная Шерсть Inc', '2026-08-10 14:00:00', NULL),
+                                                                                                                                                          ('cccccccc-cccc-cccc-cccc-cccccccccccc', 0, 'ASN-2026-003', 'EXT-003', 'WH-002', 'ASN_MATCHING', 'ARRIVED', 'Хвостатый Хвост Group', '2026-08-05 08:00:00', '2026-08-05 07:45:00'),
+                                                                                                                                                          ('dddddddd-dddd-dddd-dddd-dddddddddddd', 0, 'ASN-2026-004', 'EXT-004', 'WH-002', 'ASN_MATCHING', 'CLOSED', 'Укус За Зад Corp', '2026-07-20 11:00:00', '2026-07-19 16:20:00'),
+                                                                                                                                                          ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 0, 'ASN-2026-005', 'EXT-005', 'WH-001', 'ASN_MATCHING', 'CANCELLED', 'Камушки Святые', '2026-09-01 09:00:00', NULL);
+
+-- =============================================
+-- 3. HANDLING UNITS
+-- =============================================
+INSERT INTO handling_units (id, inbound_delivery_id, parent_unit_id, lpn, type, path) VALUES
+-- Для ASN-001 (WH-001)
+('10000000-1111-1111-1111-111111111111', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', NULL, 'PALLET-001', 'PALLET', '/PALLET-001'),
+('10000000-1111-1111-1111-111111111112', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '10000000-1111-1111-1111-111111111111', 'BOX-001', 'BOX', '/PALLET-001/BOX-001'),
+('10000000-1111-1111-1111-111111111113', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '10000000-1111-1111-1111-111111111111', 'BOX-002', 'BOX', '/PALLET-001/BOX-002'),
+('10000000-1111-1111-1111-111111111114', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', NULL, 'PALLET-002', 'PALLET', '/PALLET-002'),
+('10000000-1111-1111-1111-111111111115', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '10000000-1111-1111-1111-111111111114', 'BOX-003', 'BOX', '/PALLET-002/BOX-003'),
+
+-- Для ASN-002 (WH-001)
+('20000000-2222-2222-2222-222222222222', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', NULL, 'PALLET-003', 'PALLET', '/PALLET-003'),
+('20000000-2222-2222-2222-222222222223', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '20000000-2222-2222-2222-222222222222', 'BOX-004', 'BOX', '/PALLET-003/BOX-004'),
+
+-- Для ASN-003 (WH-002)
+('30000000-3333-3333-3333-333333333333', 'cccccccc-cccc-cccc-cccc-cccccccccccc', NULL, 'PALLET-004', 'PALLET', '/PALLET-004'),
+('30000000-3333-3333-3333-333333333334', 'cccccccc-cccc-cccc-cccc-cccccccccccc', '30000000-3333-3333-3333-333333333333', 'BOX-005', 'BOX', '/PALLET-004/BOX-005'),
+
+-- Для ASN-004 (WH-002)
+('40000000-4444-4444-4444-444444444444', 'dddddddd-dddd-dddd-dddd-dddddddddddd', NULL, 'PALLET-005', 'PALLET', '/PALLET-005'),
+
+-- Для ASN-005 (WH-001)
+('50000000-5555-5555-5555-555555555555', 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', NULL, 'PALLET-006', 'PALLET', '/PALLET-006'),
+('50000000-5555-5555-5555-555555555556', 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '50000000-5555-5555-5555-555555555555', 'BOX-006', 'BOX', '/PALLET-006/BOX-006');
+
+-- =============================================
+-- 4. CONTENTS
+-- =============================================
+INSERT INTO contents (id, container_unit_id, sku, quantity) VALUES
+                                                                ('c1111111-1111-1111-1111-111111111111', '10000000-1111-1111-1111-111111111112', 'HOLY-CAT-001', 5),
+                                                                ('c1111111-1111-1111-1111-111111111112', '10000000-1111-1111-1111-111111111113', 'SHARP-CLAW-001', 3),
+                                                                ('c1111111-1111-1111-1111-111111111113', '10000000-1111-1111-1111-111111111115', 'LONG-FUR-001', 10),
+                                                                ('c2222222-2222-2222-2222-222222222222', '20000000-2222-2222-2222-222222222223', 'TAILED-TAIL-001', 2),
+                                                                ('c3333333-3333-3333-3333-333333333333', '30000000-3333-3333-3333-333333333334', 'BITE-BEHIND-001', 7),
+                                                                ('c5555555-5555-5555-5555-555555555555', '50000000-5555-5555-5555-555555555556', 'HOLY-STONE-001', 4);
+
+-- =============================================
+-- 5. GOODS RECEIPTS
+-- =============================================
+INSERT INTO goods_receipts (id, asn_id, manager_id, gate_number, receiving_status, warehouse_id) VALUES
+                                                                                                     ('f1111111-1111-1111-1111-111111111111', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '11111111-1111-1111-1111-111111111111', 'GATE-A1', 'COMPLETED', 'WH-001'),
+                                                                                                     ('f2222222-2222-2222-2222-222222222222', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '11111111-1111-1111-1111-111111111111', 'GATE-B2', 'IN_PROGRESS', 'WH-001'),
+                                                                                                     ('f3333333-3333-3333-3333-333333333333', 'cccccccc-cccc-cccc-cccc-cccccccccccc', '55555555-5555-5555-5555-555555555555', 'GATE-C3', 'COMPLETED', 'WH-002'),
+                                                                                                     ('f4444444-4444-4444-4444-444444444444', 'dddddddd-dddd-dddd-dddd-dddddddddddd', '55555555-5555-5555-5555-555555555555', 'GATE-D4', 'COMPLETED', 'WH-002'),
+                                                                                                     ('f5555555-5555-5555-5555-555555555555', 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '11111111-1111-1111-1111-111111111111', 'GATE-E5', 'PENDING', 'WH-001');
+
+-- =============================================
+-- 6. WORKER RECEIVING SESSIONS
+-- =============================================
+INSERT INTO worker_receiving_sessions (id, inbound_delivery_id, receipt_id, worker_id, current_unit_id, current_unit_lpn_path, receiving_mode, worker_receiving_session_status) VALUES
+                                                                                                                                                                                    ('e1111111-1111-1111-1111-111111111111', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'f1111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222', '10000000-1111-1111-1111-111111111113', '/PALLET-001/BOX-002', 'ASN_MATCHING', 'ACTIVE'),
+                                                                                                                                                                                    ('e2222222-2222-2222-2222-222222222222', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'f1111111-1111-1111-1111-111111111111', '33333333-3333-3333-3333-333333333333', '10000000-1111-1111-1111-111111111115', '/PALLET-002/BOX-003', 'ASN_MATCHING', 'ACTIVE'),
+                                                                                                                                                                                    ('e3333333-3333-3333-3333-333333333333', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'f2222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', '20000000-2222-2222-2222-222222222223', '/PALLET-003/BOX-004', 'ASN_MATCHING', 'COMPLETED'),
+                                                                                                                                                                                    ('e4444444-4444-4444-4444-444444444444', 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'f3333333-3333-3333-3333-333333333333', '44444444-4444-4444-4444-444444444444', '30000000-3333-3333-3333-333333333334', '/PALLET-004/BOX-005', 'ASN_MATCHING', 'ACTIVE'),
+                                                                                                                                                                                    ('e5555555-5555-5555-5555-555555555555', 'dddddddd-dddd-dddd-dddd-dddddddddddd', 'f4444444-4444-4444-4444-444444444444', '44444444-4444-4444-4444-444444444444', NULL, NULL, 'ASN_MATCHING', 'COMPLETED');
+
+-- =============================================
+-- 7. RECEIVED HANDLING UNITS
+-- =============================================
+INSERT INTO received_handling_units (id, parent_id, receipt_id, worker_receiving_session_id, lpn) VALUES
+                                                                                                      ('b1111111-1111-1111-1111-111111111111', NULL, 'f1111111-1111-1111-1111-111111111111', 'e1111111-1111-1111-1111-111111111111', 'REC-PALLET-001'),
+                                                                                                      ('b1111111-1111-1111-1111-111111111112', 'b1111111-1111-1111-1111-111111111111', 'f1111111-1111-1111-1111-111111111111', 'e1111111-1111-1111-1111-111111111111', 'REC-BOX-001'),
+                                                                                                      ('b1111111-1111-1111-1111-111111111113', 'b1111111-1111-1111-1111-111111111111', 'f1111111-1111-1111-1111-111111111111', 'e1111111-1111-1111-1111-111111111111', 'REC-BOX-002'),
+                                                                                                      ('b2222222-2222-2222-2222-222222222222', NULL, 'f2222222-2222-2222-2222-222222222222', 'e3333333-3333-3333-3333-333333333333', 'REC-PALLET-002'),
+                                                                                                      ('b3333333-3333-3333-3333-333333333333', NULL, 'f3333333-3333-3333-3333-333333333333', 'e4444444-4444-4444-4444-444444444444', 'REC-PALLET-003'),
+                                                                                                      ('b4444444-4444-4444-4444-444444444444', NULL, 'f4444444-4444-4444-4444-444444444444', 'e5555555-5555-5555-5555-555555555555', 'REC-PALLET-004');
+
+-- =============================================
+-- 8. RECEIVED CONTENTS
+-- =============================================
+INSERT INTO received_contents (id, container_unit_id, sku, quantity) VALUES
+                                                                         ('a1111111-1111-1111-1111-111111111111', 'b1111111-1111-1111-1111-111111111112', 'HOLY-CAT-001', 5),
+                                                                         ('a1111111-1111-1111-1111-111111111113', 'b1111111-1111-1111-1111-111111111113', 'SHARP-CLAW-001', 3),
+                                                                         ('a2222222-2222-2222-2222-222222222222', 'b2222222-2222-2222-2222-222222222222', 'LONG-FUR-001', 10),
+                                                                         ('a3333333-3333-3333-3333-333333333333', 'b3333333-3333-3333-3333-333333333333', 'TAILED-TAIL-001', 2),
+                                                                         ('a4444444-4444-4444-4444-444444444444', 'b4444444-4444-4444-4444-444444444444', 'BITE-BEHIND-001', 7);
