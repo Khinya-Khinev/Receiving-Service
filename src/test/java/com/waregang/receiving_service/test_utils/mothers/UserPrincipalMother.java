@@ -1,6 +1,6 @@
 package com.waregang.receiving_service.test_utils.mothers;
 
-import com.waregang.receiving_service.security.Authority;
+import com.waregang.receiving_service.user.domain.Authority;
 import com.waregang.receiving_service.security.UserPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -15,7 +15,7 @@ public class UserPrincipalMother {
                 "test_worker",
                 "test_worker@warehouse.com",
                 warehouseId,
-                List.of(new SimpleGrantedAuthority(Authority.BOX_CAT.name()))
+                List.of(new SimpleGrantedAuthority(Authority.WORKER.name()))
         );
     }
 
@@ -25,7 +25,7 @@ public class UserPrincipalMother {
                 "test_manager",
                 "test_manager@warehouse.com",
                 warehouseId,
-                List.of(new SimpleGrantedAuthority(Authority.BOX_MANAGER.name()))
+                List.of(new SimpleGrantedAuthority(Authority.MANAGER.name()))
         );
     }
 }

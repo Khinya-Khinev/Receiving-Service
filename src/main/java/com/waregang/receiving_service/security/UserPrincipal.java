@@ -1,5 +1,6 @@
 package com.waregang.receiving_service.security;
 
+import com.waregang.receiving_service.user.domain.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.List;

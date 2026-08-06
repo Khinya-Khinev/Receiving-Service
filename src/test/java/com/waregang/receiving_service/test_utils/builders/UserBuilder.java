@@ -1,15 +1,15 @@
 package com.waregang.receiving_service.test_utils.builders;
 
-import com.waregang.receiving_service.security.Authority;
-import com.waregang.receiving_service.security.User;
-import com.waregang.receiving_service.security.api.dto.RegisterUserRequest;
+import com.waregang.receiving_service.user.domain.Authority;
+import com.waregang.receiving_service.user.domain.User;
+import com.waregang.receiving_service.user.api.dto.RegisterUserRequest;
 import java.util.UUID;
 
 public class UserBuilder {
     private String password = "encodedPassword123"; // not encoded yet
     private String nickname = "TestUser";
     private String email = "test@warehouse.com";
-    private Authority authority = Authority.BOX_CAT;
+    private Authority authority = Authority.WORKER;
     private String warehouseId = "WH-001";
 
     public static UserBuilder aUser() {
@@ -53,7 +53,7 @@ public class UserBuilder {
     public User build() {
         RegisterUserRequest request = buildRequest();
 
-        if (authority == Authority.BOX_MANAGER) {
+        if (authority == Authority.MANAGER) {
             return User.createManager(request, this.password);
         } else {
             return User.createWorker(request, this.password);
@@ -61,12 +61,12 @@ public class UserBuilder {
     }
 
     public User buildBoxCat() {
-        this.authority = Authority.BOX_CAT;
+        this.authority = Authority.WORKER;
         return build();
     }
 
     public User buildBoxManager() {
-        this.authority = Authority.BOX_MANAGER;
+        this.authority = Authority.MANAGER;
         return build();
     }
 

@@ -1,6 +1,6 @@
-package com.waregang.receiving_service.security.application;
+package com.waregang.receiving_service.user.application;
 
-import com.waregang.receiving_service.security.UserRepository;
+import com.waregang.receiving_service.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;

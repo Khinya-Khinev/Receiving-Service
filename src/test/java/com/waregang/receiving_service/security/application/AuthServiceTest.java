@@ -1,9 +1,9 @@
 package com.waregang.receiving_service.security.application;
 
-import com.waregang.receiving_service.security.User;
-import com.waregang.receiving_service.security.UserRepository;
-import com.waregang.receiving_service.security.api.dto.AuthenticationRequest;
-import com.waregang.receiving_service.security.api.dto.AuthenticationResponse;
+import com.waregang.receiving_service.user.domain.User;
+import com.waregang.receiving_service.user.infrastructure.UserRepository;
+import com.waregang.receiving_service.user.api.dto.AuthenticationRequest;
+import com.waregang.receiving_service.user.api.dto.AuthenticationResponse;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

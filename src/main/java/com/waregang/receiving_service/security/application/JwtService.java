@@ -1,6 +1,6 @@
 package com.waregang.receiving_service.security.application;
 
-import com.waregang.receiving_service.security.User;
+import com.waregang.receiving_service.user.domain.User;
 import com.waregang.receiving_service.security.UserPrincipal;
 import com.waregang.receiving_service.security.configuration.JwtProperties;
 import io.jsonwebtoken.Claims;
@@ -48,8 +48,7 @@ public class JwtService {
 
     public UserPrincipal extractUserPrincipal(String token) {
         Claims claims = extractAllClaims(token);
-        // Note: You might need to handle the case where claims.get("workerSessionId") is a String
-        // and needs to be converted to a UUID.
+
         Object idObject = claims.get("id");
         UUID userId = (idObject instanceof UUID) ? (UUID) idObject : UUID.fromString(idObject.toString());
 
@@ -78,7 +77,6 @@ public class JwtService {
     private List<SimpleGrantedAuthority> extractAuthorities(String token) {
         Claims claims = extractAllClaims(token);
 
-        // Этот код теперь будет работать правильно, так как в authorities лежат строки
         List<?> authorities = claims.get("authorities", List.class);
 
         return authorities.stream()
@@ -87,7 +85,11 @@ public class JwtService {
                 .toList();
     }
 
-    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
+    private String buildToken(
+            Map<String, Object> extraClaims,
+            UserDetails userDetails,
+            long expiration
+    ) {
         return Jwts.builder()
                 .claims(extraClaims)
                 .subject(userDetails.getUsername())

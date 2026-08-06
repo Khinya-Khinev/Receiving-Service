@@ -1,5 +1,6 @@
-package com.waregang.receiving_service.security;
+package com.waregang.receiving_service.user.infrastructure;
 
+import com.waregang.receiving_service.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.waregang.receiving_service;
+package com.waregang.receiving_service.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

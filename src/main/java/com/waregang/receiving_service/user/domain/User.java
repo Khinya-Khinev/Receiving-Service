@@ -1,7 +1,7 @@
-package com.waregang.receiving_service.security;
+package com.waregang.receiving_service.user.domain;
 
 import com.waregang.receiving_service.common.IdGenerator;
-import com.waregang.receiving_service.security.api.dto.RegisterUserRequest;
+import com.waregang.receiving_service.user.api.dto.RegisterUserRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -56,7 +56,7 @@ public class User implements UserDetails {
         return new User(
                 request,
                 encodedPassword,
-                Authority.BOX_CAT
+                Authority.WORKER
         );
     }
 
@@ -64,7 +64,15 @@ public class User implements UserDetails {
         return new User(
                 request,
                 encodedPassword,
-                Authority.BOX_MANAGER
+                Authority.MANAGER
+        );
+    }
+
+    public static User createAdmin(RegisterUserRequest request, String encodedPassword) {
+        return new User(
+                request,
+                encodedPassword,
+                Authority.ADMIN
         );
     }
 

@@ -1,4 +1,4 @@
-package com.waregang.receiving_service.security.api.dto;
+package com.waregang.receiving_service.user.api.dto;
 
 public record AuthenticationResponse(
         String accessToken,
