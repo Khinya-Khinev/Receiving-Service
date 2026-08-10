@@ -1,17 +1,11 @@
-package com.waregang.receiving_service.user.api.dto;
+package com.waregang.receiving_service.security.api.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record RegisterUserRequest(
+public record AuthenticationRequest(
         @NotBlank
-        String nickname,
-
-        @NotBlank
-        String warehouseId,
-
         @Email
-        @NotBlank
         String email,
 
         @NotBlank

@@ -1,6 +1,6 @@
 package com.waregang.receiving_service.security;
 
-import com.waregang.receiving_service.user.api.dto.AuthenticationRequest;
+import com.waregang.receiving_service.security.api.dto.AuthenticationRequest;
 import com.waregang.receiving_service.security.application.AuthService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;

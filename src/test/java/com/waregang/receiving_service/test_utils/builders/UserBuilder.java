@@ -2,7 +2,7 @@ package com.waregang.receiving_service.test_utils.builders;
 
 import com.waregang.receiving_service.user.domain.Authority;
 import com.waregang.receiving_service.user.domain.User;
-import com.waregang.receiving_service.user.api.dto.RegisterUserRequest;
+import com.waregang.receiving_service.security.api.dto.RegisterUserRequest;
 import java.util.UUID;
 
 public class UserBuilder {

@@ -1,7 +1,7 @@
 package com.waregang.receiving_service.user.domain;
 
 import com.waregang.receiving_service.common.IdGenerator;
-import com.waregang.receiving_service.user.api.dto.RegisterUserRequest;
+import com.waregang.receiving_service.security.api.dto.RegisterUserRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

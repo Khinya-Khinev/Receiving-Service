@@ -1,9 +1,9 @@
-package com.waregang.receiving_service.user.api;
+package com.waregang.receiving_service.security.api;
 
 import com.waregang.receiving_service.security.application.AuthService;
-import com.waregang.receiving_service.user.api.dto.AuthenticationRequest;
-import com.waregang.receiving_service.user.api.dto.AuthenticationResponse;
-import com.waregang.receiving_service.user.api.dto.RegisterUserRequest;
+import com.waregang.receiving_service.security.api.dto.AuthenticationRequest;
+import com.waregang.receiving_service.security.api.dto.AuthenticationResponse;
+import com.waregang.receiving_service.security.api.dto.RegisterUserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

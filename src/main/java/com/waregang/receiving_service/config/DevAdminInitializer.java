@@ -1,6 +1,6 @@
 package com.waregang.receiving_service.config;
 
-import com.waregang.receiving_service.user.api.dto.RegisterUserRequest;
+import com.waregang.receiving_service.security.api.dto.RegisterUserRequest;
 import com.waregang.receiving_service.user.domain.User;
 import com.waregang.receiving_service.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
