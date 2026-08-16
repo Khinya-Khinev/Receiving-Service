@@ -3,7 +3,7 @@ app:
     worker-receiving-session-repository-adapter: "jpa"
   security:
     jwt:
-      secret: "test-secret-key-for-unit-tests-that-is-at-least-32-characters-long"
+      secret: "62wOt+JVGFEOFd+o70ssHfHbW1JIy6f1q22bYi2/Ljw="
       access-token-expiration: 86400000
       refresh-token-expiration: 86400000
 
