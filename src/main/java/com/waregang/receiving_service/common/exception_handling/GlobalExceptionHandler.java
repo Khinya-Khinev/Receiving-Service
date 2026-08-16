@@ -2,6 +2,7 @@ package com.waregang.receiving_service.common.exception_handling;
 
 import com.waregang.receiving_service.common.idempotency.IdempotencyKeyConflictException;
 import com.waregang.receiving_service.common.idempotency.MissingIdempotencyHeaderException;
+import com.waregang.receiving_service.security.exception.TokenExpiredException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +80,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ProblemDetail handleAuthenticationException(AuthenticationException authenticationException) {
         log.warn("Handling authentication exception: {}", authenticationException.getMessage(), authenticationException);
         return problemDetailFactory.create(authenticationException);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    ProblemDetail handleTokenExpiredException(TokenExpiredException ex) {
+        log.warn("Handling token expired exception: {}", ex.getMessage());
+        return problemDetailFactory.create(ex);
     }
 
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)

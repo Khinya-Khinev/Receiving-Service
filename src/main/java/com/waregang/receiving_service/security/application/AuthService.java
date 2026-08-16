@@ -1,6 +1,7 @@
 package com.waregang.receiving_service.security.application;
 
 import com.waregang.receiving_service.common.infrastructure.DatabaseExceptionTranslator;
+import com.waregang.receiving_service.security.exception.TokenExpiredException;
 import com.waregang.receiving_service.user.domain.User;
 import com.waregang.receiving_service.user.infrastructure.UserRepository;
 import com.waregang.receiving_service.security.api.dto.AuthenticationRequest;
@@ -75,25 +76,24 @@ public class AuthService {
     public AuthenticationResponse refresh(String refreshToken) {
         log.debug("Attempting to refresh token");
 
-        if (!jwtService.isTokenValid(refreshToken)) {
-            log.warn("Invalid refresh token attempt");
-            throw new RuntimeException("Invalid refresh token");
+        try {
+            String username = jwtService.extractUsername(refreshToken);
+
+            User user = userRepository.findByEmail(username)
+                    .orElseThrow(() -> {
+                        log.warn("User not found during refresh: {}", username);
+                        return new RuntimeException("User not found");
+                    });
+
+            log.info("Token refreshed for user: {}", user.getEmail());
+
+            var accessToken = jwtService.generateAccessToken(user);
+            var newRefreshToken = jwtService.generateRefreshToken(user);
+
+            return new AuthenticationResponse(accessToken, newRefreshToken);
+        } catch (TokenExpiredException e) {
+            throw new TokenExpiredException(e.getMessage(), "refresh token expired");
         }
-
-        String username = jwtService.extractUsername(refreshToken);
-
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> {
-                    log.warn("User not found during refresh: {}", username);
-                    return new RuntimeException("User not found");
-                });
-
-        log.info("Token refreshed for user: {}", user.getEmail());
-
-        var accessToken = jwtService.generateAccessToken(user);
-        var newRefreshToken = jwtService.generateRefreshToken(user);
-
-        return new AuthenticationResponse(accessToken, newRefreshToken);
     }
 
     @Transactional

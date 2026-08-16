@@ -2,8 +2,10 @@ package com.waregang.receiving_service.security.application;
 
 import com.waregang.receiving_service.security.UserPrincipal;
 import com.waregang.receiving_service.security.configuration.JwtProperties;
+import com.waregang.receiving_service.security.exception.TokenExpiredException;
 import com.waregang.receiving_service.user.domain.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -71,7 +73,7 @@ public class JwtService {
     public boolean isTokenValid(String token) {
         try {
             return !isTokenExpired(token);
-        } catch (BadCredentialsException e) {
+        } catch (BadCredentialsException | TokenExpiredException e) {
             return false;
         }
     }
@@ -83,6 +85,8 @@ public class JwtService {
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
+        } catch (ExpiredJwtException e) {
+            throw new TokenExpiredException("Token expired", "token expired");
         } catch (JwtException | IllegalArgumentException e) {
             throw new BadCredentialsException("Invalid or expired JWT token", e);
         }
