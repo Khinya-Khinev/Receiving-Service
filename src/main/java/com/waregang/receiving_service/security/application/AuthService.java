@@ -1,6 +1,6 @@
 package com.waregang.receiving_service.security.application;
 
-import com.waregang.receiving_service.common.exception_handling.DatabaseExceptionTranslator;
+import com.waregang.receiving_service.common.infrastructure.DatabaseExceptionTranslator;
 import com.waregang.receiving_service.user.domain.User;
 import com.waregang.receiving_service.user.infrastructure.UserRepository;
 import com.waregang.receiving_service.security.api.dto.AuthenticationRequest;

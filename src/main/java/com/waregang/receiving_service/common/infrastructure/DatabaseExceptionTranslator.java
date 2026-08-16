@@ -1,5 +1,6 @@
-package com.waregang.receiving_service.common.exception_handling;
+package com.waregang.receiving_service.common.infrastructure;
 
+import com.waregang.receiving_service.common.exception_handling.AppException;
 import com.waregang.receiving_service.common.exception_handling.error_code.DatabaseErrorCode;
 import com.waregang.receiving_service.common.exception_handling.error_code.ErrorCode;
 import com.waregang.receiving_service.common.exception_handling.error_code.ReceivingErrorCode;

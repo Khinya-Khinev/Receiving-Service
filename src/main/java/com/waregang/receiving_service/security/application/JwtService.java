@@ -1,14 +1,17 @@
 package com.waregang.receiving_service.security.application;
 
-import com.waregang.receiving_service.user.domain.User;
 import com.waregang.receiving_service.security.UserPrincipal;
 import com.waregang.receiving_service.security.configuration.JwtProperties;
+import com.waregang.receiving_service.user.domain.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority; // Добавлен импорт
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,10 +21,16 @@ import java.util.*;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
-
 @Service
 public class JwtService {
     private final JwtProperties jwtProperties;
+    private SecretKey signInKey;
+
+    @PostConstruct
+    private void init() {
+        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.secret());
+        this.signInKey = Keys.hmacShaKeyFor(keyBytes);
+    }
 
     public String generateAccessToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -30,7 +39,6 @@ public class JwtService {
             claims.put("id", u.getId());
             claims.put("warehouseId", u.getWarehouseId());
             claims.put("nickname", u.getNickname());
-
             claims.put("authorities", u.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .toList());
@@ -49,36 +57,42 @@ public class JwtService {
     public UserPrincipal extractUserPrincipal(String token) {
         Claims claims = extractAllClaims(token);
 
-        Object idObject = claims.get("id");
-        UUID userId = (idObject instanceof UUID) ? (UUID) idObject : UUID.fromString(idObject.toString());
+        UUID userId = UUID.fromString(claims.get("id").toString());
 
         return new UserPrincipal(
                 userId,
                 (String) claims.get("nickname"),
                 claims.getSubject(),
                 (String) claims.get("warehouseId"),
-                extractAuthorities(token)
+                extractAuthorities(claims)
         );
     }
 
     public boolean isTokenValid(String token) {
-        return !isTokenExpired(token);
+        try {
+            return !isTokenExpired(token);
+        } catch (BadCredentialsException e) {
+            return false;
+        }
     }
-
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSignInKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            return Jwts.parser()
+                    .verifyWith(signInKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new BadCredentialsException("Invalid or expired JWT token", e);
+        }
     }
 
-    private List<SimpleGrantedAuthority> extractAuthorities(String token) {
-        Claims claims = extractAllClaims(token);
-
+    private List<SimpleGrantedAuthority> extractAuthorities(Claims claims) {
         List<?> authorities = claims.get("authorities", List.class);
-
+        if (authorities == null) {
+            throw new BadCredentialsException("Invalid or expired JWT token");
+        }
         return authorities.stream()
                 .map(Object::toString)
                 .map(SimpleGrantedAuthority::new)
@@ -90,12 +104,13 @@ public class JwtService {
             UserDetails userDetails,
             long expiration
     ) {
+        long now = System.currentTimeMillis();
         return Jwts.builder()
                 .claims(extraClaims)
                 .subject(userDetails.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSignInKey())
+                .issuedAt(new Date(now))
+                .expiration(new Date(now + expiration))
+                .signWith(signInKey)
                 .compact();
     }
 
@@ -110,10 +125,5 @@ public class JwtService {
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
-    }
-
-    private SecretKey getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.secret());
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
