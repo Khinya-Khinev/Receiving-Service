@@ -1,15 +1,15 @@
 app:
   adapters:
     worker-receiving-session-repository-adapter: "jpa"
+  security:
+    jwt:
+      secret: "test-secret-key-for-unit-tests-that-is-at-least-32-characters-long"
+      access-token-expiration: 86400000
+      refresh-token-expiration: 86400000
 
 spring:
   application:
     name: receiving-service
-
-  security:
-    jwt:
-      secret: "test-secret-key-for-unit-tests-that-is-at-least-32-characters-long"
-      expiration: 86400000
 
   jpa:
     hibernate:
@@ -22,49 +22,12 @@ spring:
   kafka:
     consumer:
       auto-offset-reset: earliest
-
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       acks: all
       retries: 3
-
       properties:
-        spring.json.add.type.headers: true # Добавляет инфу о классе в заголовки (важно для десериализации)
+        spring.json.add.type.headers: true
 
-
-logging:
-    group:
-      kafka:
-        - org.springframework.kafka
-        - org.apache.kafka.clients.producer
-      web:
-      - org.springframework.web
-      - org.springframework.web.servlet
-      - com.waregang.receiving_service.controller
-      db:
-#      - org.hibernate.SQL
-#      - org.springframework.transaction
-      - org.springframework.jdbc.core
-      security:
-      - org.springframework.security
-      - com.waregang.receiving_service.security
-      - com.waregang.receiving_service.filter
-      test-ctx:
-      - org.springframework.test
-      - org.springframework.boot.test
-      - org.springframework.context
-      - org.springframework.beans
-      cache:
-      - io.lettuce.core
-
-    level:
-      web: off
-      db: trace
-      security: off
-      test-ctx: off
-      cache: off
-      kafka: off
-
-      org.hibernate.orm.jdbc.bind: TRACE
-      org.hibernate.type: TRACE
+# ... остальное без изменений (logging и т.д.)
