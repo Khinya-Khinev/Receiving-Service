@@ -56,7 +56,6 @@ public class GoodsReceiptBuilder {
     public GoodsReceipt buildOpened() {
         return GoodsReceipt.open(
                 managerId,
-                "Test Manager",
                 inboundDeliveryId,
                 warehouseId,
                 ReceivingMode.ASN_MATCHING,

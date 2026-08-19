@@ -48,7 +48,6 @@ public class GoodsReceiptService {
 
         GoodsReceipt receipt = GoodsReceipt.open(
                 manager.id(),
-                manager.nickname(),
                 asn.id(),
                 asn.warehouseId(),
                 asn.receivingMode(),

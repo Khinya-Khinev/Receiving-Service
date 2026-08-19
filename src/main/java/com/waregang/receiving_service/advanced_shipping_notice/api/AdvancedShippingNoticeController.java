@@ -24,7 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 
 @RestController
-@RequestMapping("/api/asns")
+@RequestMapping("/api/receiving-service/asns")
 public class AdvancedShippingNoticeController {
     private final AdvancedShippingNoticeService service;
     private final AdvancedShippingNoticeMapper mapper;

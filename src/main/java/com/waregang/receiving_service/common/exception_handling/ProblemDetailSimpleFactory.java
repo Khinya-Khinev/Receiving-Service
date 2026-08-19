@@ -1,9 +1,6 @@
 package com.waregang.receiving_service.common.exception_handling;
 
 import com.waregang.receiving_service.common.exception_handling.error_code.ErrorCode;
-import com.waregang.receiving_service.common.idempotency.IdempotencyKeyConflictException;
-import com.waregang.receiving_service.common.idempotency.MissingIdempotencyHeaderException;
-import com.waregang.receiving_service.security.exception.TokenExpiredException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
@@ -48,22 +45,6 @@ public class ProblemDetailSimpleFactory {
         return pd;
     }
 
-    public ProblemDetail create(IdempotencyKeyConflictException ex) {
-        return baseProblemDetail(
-                HttpStatus.CONFLICT,
-                "Idempotency key conflict",
-                ex.getMessage()
-        );
-    }
-
-    public ProblemDetail create(MissingIdempotencyHeaderException ex) {
-        return baseProblemDetail(
-                HttpStatus.BAD_REQUEST,
-                "Missing idempotency key",
-                ex.getMessage()
-        );
-    }
-
     public ProblemDetail create(AppException ex) {
         ErrorCode errorCode = ex.getErrorCode();
         String code = errorCode.getCode();
@@ -100,16 +81,6 @@ public class ProblemDetailSimpleFactory {
 
     }
 
-    public ProblemDetail create(TokenExpiredException authenticationException) {
-        ProblemDetail pd = baseProblemDetail(
-                HttpStatus.UNAUTHORIZED,
-                "Authentication failed",
-                authenticationException.getMessage()
-        );
-        pd.setProperty("reason", authenticationException.getReason());
-
-        return pd;
-    }
 
     public ProblemDetail create(ObjectOptimisticLockingFailureException optimisticLockException) {
         return baseProblemDetail(

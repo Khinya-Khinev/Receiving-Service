@@ -40,7 +40,6 @@ public class GoodsReceipt extends AggregateRoot {
 
     public static GoodsReceipt open(
             UUID managerId,
-            String managerNickname,
             UUID inboundDeliveryId,
             String warehouseId,
             ReceivingMode receivingMode, // Passed for the event
@@ -48,7 +47,7 @@ public class GoodsReceipt extends AggregateRoot {
             String gateNumber
     ) {
         GoodsReceipt receipt = new GoodsReceipt(managerId, inboundDeliveryId, warehouseId, gateNumber);
-        receipt.registerOpenedEvent(managerNickname, asnNumber, receivingMode);
+        receipt.registerOpenedEvent(asnNumber, receivingMode);
         return receipt;
     }
 
@@ -70,13 +69,12 @@ public class GoodsReceipt extends AggregateRoot {
         return receipt;
     }
 
-    private void registerOpenedEvent(String managerNickname, String asnNumber, ReceivingMode receivingMode) {
+    private void registerOpenedEvent(String asnNumber, ReceivingMode receivingMode) {
         registerEvent(new OpenedGoodsReceiptEvent(
                 this.id,
                 asnNumber,
                 this.gateNumber,
                 this.warehouseId,
-                managerNickname,
                 receivingMode
         ));
     }

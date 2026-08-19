@@ -1,4 +1,4 @@
-package com.waregang.receiving_service.common.infrastructure;
+package com.waregang.receiving_service.common.logging;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

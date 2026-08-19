@@ -27,7 +27,7 @@ class GoodsReceiptTest {
         UUID deliveryId = UUID.randomUUID();
 
         GoodsReceipt receipt = GoodsReceipt.open(
-                managerId, "John Doe", deliveryId, WAREHOUSE_A,
+                managerId, deliveryId, WAREHOUSE_A,
                 ReceivingMode.ASN_MATCHING, "ASN-999", "GATE-01"
         );
 

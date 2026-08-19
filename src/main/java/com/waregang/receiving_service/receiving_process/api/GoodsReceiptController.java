@@ -20,7 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 
 @RestController
-@RequestMapping("/api/goods-receipts")
+@RequestMapping("/api/receiving-service/goods-receipts")
 public class GoodsReceiptController {
     private final GoodsReceiptService service;
 

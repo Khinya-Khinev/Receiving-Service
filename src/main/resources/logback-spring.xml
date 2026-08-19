@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{50} - [Req: %X{requestId}] %msg%n%ex{full}" />
-
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-        </encoder>
-    </appender>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
     <root level="INFO">
-        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="CONSOLE">
+            <!-- Этот фильтр будет отсекать весь спам от актуатора -->
+            <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+                <evaluator>
+                    <expression>return message.contains("/actuator");</expression>
+                </evaluator>
+                <OnMismatch>NEUTRAL</OnMismatch>
+                <OnMatch>DENY</OnMatch>
+            </filter>
+        </appender-ref>
     </root>
-
-    <logger name="com.waregang" level="DEBUG" />
-    <logger name="org.springframework.web" level="DEBUG" />
-    <logger name="org.springframework.security" level="DEBUG" />
-    <logger name="org.hibernate.SQL" level="DEBUG" />
-    <logger name="org.springframework.transaction" level="DEBUG" />
-    <logger name="org.flywaydb" level="DEBUG" />
-    <logger name="org.apache.kafka.clients" level="DEBUG" />
 </configuration>

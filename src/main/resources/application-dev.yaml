@@ -2,11 +2,7 @@ app:
   adapters:
     worker-receiving-session-repository-adapter: "jpa"
 
-  security:
-    jwt:
-      secret: ${JWT_SECRET}
-      access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
-      refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+
 
     cors:
       allowed-origins: ${CORS_ALLOWED_ORIGINS}

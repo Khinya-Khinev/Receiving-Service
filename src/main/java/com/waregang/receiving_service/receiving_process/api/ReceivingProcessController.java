@@ -16,7 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 
 @RestController
-@RequestMapping("/api/receiving-sessions")
+@RequestMapping("/api/receiving-service/receiving-sessions")
 public class ReceivingProcessController {
     private final ReceivingProcessService service;
 

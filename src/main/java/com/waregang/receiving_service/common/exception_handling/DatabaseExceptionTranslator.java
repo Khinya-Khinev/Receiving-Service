@@ -1,10 +1,8 @@
-package com.waregang.receiving_service.common.infrastructure;
+package com.waregang.receiving_service.common.exception_handling;
 
-import com.waregang.receiving_service.common.exception_handling.AppException;
 import com.waregang.receiving_service.common.exception_handling.error_code.DatabaseErrorCode;
 import com.waregang.receiving_service.common.exception_handling.error_code.ErrorCode;
 import com.waregang.receiving_service.common.exception_handling.error_code.ReceivingErrorCode;
-import com.waregang.receiving_service.common.exception_handling.error_code.UserErrorCode;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
@@ -15,7 +13,6 @@ import java.util.Map;
 public class DatabaseExceptionTranslator {
 
     private static final Map<String, ErrorCode> CONSTRAINT_MAPPING = Map.of(
-            "uq_users_email", UserErrorCode.USER_ALREADY_EXISTS,
             "uq_asn_asn_number", DatabaseErrorCode.ASN_NUMBER_ALREADY_EXISTS,
             "uq_asn_external_id", DatabaseErrorCode.ASN_EXTERNAL_ID_ALREADY_EXISTS,
             "uq_handling_units_lpn", DatabaseErrorCode.LPN_ALREADY_EXISTS,

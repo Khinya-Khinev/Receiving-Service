@@ -11,7 +11,8 @@ RUN ./mvnw package -DskipTests
 
 FROM eclipse-temurin:25-jre
 WORKDIR /app
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /app/target/*.jar app.jar
 
-EXPOSE 8080
+EXPOSE 8081
 ENTRYPOINT ["java","-jar","app.jar"]

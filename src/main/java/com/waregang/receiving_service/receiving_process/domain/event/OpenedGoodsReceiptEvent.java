@@ -9,6 +9,5 @@ public record OpenedGoodsReceiptEvent(
         String asnNumber,
         String gateNumber,
         String warehouseId,
-        String managerNickname,
         ReceivingMode mode
 ) {}

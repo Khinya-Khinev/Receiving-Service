@@ -16,7 +16,6 @@
 
     <properties>
         <java.version>25</java.version>
-        <jjwt.version>0.12.6</jjwt.version>
     </properties>
 
     <dependencies>
@@ -25,25 +24,6 @@
             <groupId>com.fasterxml.uuid</groupId>
             <artifactId>java-uuid-generator</artifactId>
             <version>5.1.0</version>
-        </dependency>
-
-        <!-- ===== JWT ===== -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-            <version>${jjwt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <version>${jjwt.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
-            <version>${jjwt.version}</version>
-            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -57,9 +37,6 @@
             <artifactId>dotenv-java</artifactId>
             <version>3.2.0</version>
         </dependency>
-
-
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -115,6 +92,12 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+
 
 
 

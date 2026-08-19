@@ -1,8 +1,5 @@
 package com.waregang.receiving_service.common.exception_handling;
 
-import com.waregang.receiving_service.common.idempotency.IdempotencyKeyConflictException;
-import com.waregang.receiving_service.common.idempotency.MissingIdempotencyHeaderException;
-import com.waregang.receiving_service.security.exception.TokenExpiredException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,18 +24,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private final ProblemDetailSimpleFactory problemDetailFactory;
-
-    @ExceptionHandler(IdempotencyKeyConflictException.class)
-    public ProblemDetail handleIdempotencyKeyConflict(IdempotencyKeyConflictException ex) {
-        log.warn("Handling idempotency key conflict: {}", ex.getMessage());
-        return problemDetailFactory.create(ex);
-    }
-
-    @ExceptionHandler(MissingIdempotencyHeaderException.class)
-    public ProblemDetail handleMissingIdempotencyHeader(MissingIdempotencyHeaderException ex) {
-        log.warn("Handling missing idempotency header: {}", ex.getMessage());
-        return problemDetailFactory.create(ex);
-    }
 
     @ExceptionHandler(AppException.class)
     ProblemDetail handleBusinessException(AppException ex) {
@@ -80,12 +65,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ProblemDetail handleAuthenticationException(AuthenticationException authenticationException) {
         log.warn("Handling authentication exception: {}", authenticationException.getMessage(), authenticationException);
         return problemDetailFactory.create(authenticationException);
-    }
-
-    @ExceptionHandler(TokenExpiredException.class)
-    ProblemDetail handleTokenExpiredException(TokenExpiredException ex) {
-        log.warn("Handling token expired exception: {}", ex.getMessage());
-        return problemDetailFactory.create(ex);
     }
 
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)

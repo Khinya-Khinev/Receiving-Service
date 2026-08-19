@@ -5,12 +5,6 @@
 -- =============================================
 -- 1. USERS
 -- =============================================
-INSERT INTO users (id, email, nickname, password, authority, warehouse_id) VALUES
-                                                                               ('11111111-1111-1111-1111-111111111111', 'cat.manager@warehouse.com', 'Barsik', 'encoded_password_123', 'MANAGER', 'WH-001'),
-                                                                               ('22222222-2222-2222-2222-222222222222', 'cat.worker1@warehouse.com', 'Murzik', 'encoded_password_123', 'WORKER', 'WH-001'),
-                                                                               ('33333333-3333-3333-3333-333333333333', 'cat.worker2@warehouse.com', 'Vaska', 'encoded_password_123', 'WORKER', 'WH-001'),
-                                                                               ('44444444-4444-4444-4444-444444444444', 'cat.worker3@warehouse.com', 'Tishka', 'encoded_password_123', 'WORKER', 'WH-002'),
-                                                                               ('55555555-5555-5555-5555-555555555555', 'cat.manager2@warehouse.com', 'Ryzhik', 'encoded_password_123', 'MANAGER', 'WH-002');
 
 -- =============================================
 -- 2. ASN (Inbound Deliveries)

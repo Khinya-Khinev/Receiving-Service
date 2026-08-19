@@ -1,25 +1,14 @@
 package com.waregang.receiving_service.security;
 
-import com.waregang.receiving_service.user.domain.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.UUID;
 
 public record UserPrincipal(
         UUID id,
-        String nickname,
-        String username,
+        String email,
         String warehouseId,
-        List<SimpleGrantedAuthority> authorities
+        Collection<SimpleGrantedAuthority> authorities
 ) {
-    public static UserPrincipal from(User user) {
-        return new UserPrincipal(
-                user.getId(),
-                user.getNickname(),
-                user.getEmail(),
-                user.getWarehouseId(),
-                List.of(new SimpleGrantedAuthority(user.getAuthority().name()))
-        );
-    }
 }
