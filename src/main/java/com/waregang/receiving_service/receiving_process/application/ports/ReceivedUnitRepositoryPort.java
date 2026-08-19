@@ -13,4 +13,6 @@ public interface ReceivedUnitRepositoryPort {
     List<ReceivedUnit> findAllRootUnitsByWorkerSessionId(UUID workerSessionId);
     List<ReceivedUnit> findAllByReceiptId(UUID receiptId);
 
+    long countUnitsScannedByWorkerId(UUID workerId);
+
 }

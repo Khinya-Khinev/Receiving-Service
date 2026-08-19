@@ -96,4 +96,9 @@ public class WorkerReceivingSessionJpaRepoAdapter implements WorkerReceivingSess
                 .map(mapper::toDomain);
     }
 
+    @Override
+    public long countCompletedReceiptsByWorkerId(UUID workerId) {
+        return repositoryJpa.countCompletedReceiptsByWorkerId(workerId);
+    }
+
 }

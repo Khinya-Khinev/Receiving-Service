@@ -25,7 +25,7 @@ public class GoodsReceiptController {
     private final GoodsReceiptService service;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('BOX_MANAGER')")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<StartReceivingResponse> startReceiving(
             @Valid @RequestBody StartReceivingRequest request,
             @AuthenticationPrincipal UserPrincipal manager
@@ -36,7 +36,7 @@ public class GoodsReceiptController {
     }
 
     @PostMapping("/{receipt-id}/closure")
-    @PreAuthorize("hasAuthority('BOX_MANAGER')")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<Void> closeReceiving(
             @PathVariable(value = "receipt-id") UUID receiptId,
             @AuthenticationPrincipal UserPrincipal manager

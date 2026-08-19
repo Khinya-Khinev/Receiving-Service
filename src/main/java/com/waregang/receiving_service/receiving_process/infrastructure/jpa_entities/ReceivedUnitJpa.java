@@ -18,11 +18,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
-@Table(name = "received_handling_units",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uk_receipt_lpn", columnNames = {"receipt_id", "lpn"})
-        }
-)
+@Table(name = "received_handling_units")
 public class ReceivedUnitJpa implements Persistable<UUID> {
 
     @Id

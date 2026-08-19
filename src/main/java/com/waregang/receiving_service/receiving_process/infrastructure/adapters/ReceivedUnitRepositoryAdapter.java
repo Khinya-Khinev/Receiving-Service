@@ -59,4 +59,9 @@ public class ReceivedUnitRepositoryAdapter implements ReceivedUnitRepositoryPort
                 .map(mapper::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public long countUnitsScannedByWorkerId(UUID workerId) {
+        return jpaRepository.countUnitsScannedByWorkerId(workerId);
+    }
 }

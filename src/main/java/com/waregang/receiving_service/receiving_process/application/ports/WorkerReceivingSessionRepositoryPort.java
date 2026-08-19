@@ -12,6 +12,8 @@ public interface WorkerReceivingSessionRepositoryPort {
 
     boolean existsByWorkerIdAndStatus(UUID id, WorkerReceivingSessionStatus workerReceivingSessionStatus);
 
+    long countCompletedReceiptsByWorkerId(UUID workerId);
+
     WorkerReceivingSession save(WorkerReceivingSession session);
 
     WorkerReceivingSession update(WorkerReceivingSession session);

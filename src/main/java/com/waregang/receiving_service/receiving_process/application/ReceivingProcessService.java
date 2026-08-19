@@ -157,6 +157,29 @@ public class ReceivingProcessService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public WorkerReceivingSessionResponse getCurrentSession(UUID workerId) {
+        WorkerReceivingSession session = findActiveSessionByWorkerId(workerId);
+        return new WorkerReceivingSessionResponse(
+                session.getId(),
+                session.getWorkerId(),
+                session.getReceiptId(),
+                session.getInboundDeliveryId(),
+                session.getStatus(),
+                session.getReceivingMode(),
+                session.getCurrentUnitLpnPath(),
+                session.getCurrentUnitId()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public WorkerStatisticsResponse getWorkerStatistics(UUID workerId) {
+        long receiptsCount = workerSessionRepository.countCompletedReceiptsByWorkerId(workerId);
+        long unitsScannedCount = receivedUnitRepository.countUnitsScannedByWorkerId(workerId);
+
+        return new WorkerStatisticsResponse(receiptsCount, unitsScannedCount);
+    }
+
     private WorkerReceivingSession findActiveSessionByWorkerIdWithLock(UUID workerId) {
         WorkerReceivingSession workerSession = workerSessionRepository
                 .findByWorkerIdWithLock(workerId)

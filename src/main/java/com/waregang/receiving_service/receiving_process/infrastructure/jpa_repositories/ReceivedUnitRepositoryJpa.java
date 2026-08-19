@@ -4,6 +4,7 @@ import com.waregang.receiving_service.receiving_process.infrastructure.jpa_entit
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +19,21 @@ public interface ReceivedUnitRepositoryJpa extends JpaRepository<ReceivedUnitJpa
             WHERE ru.workerSessionId = :workerSessionId 
             AND ru.parentUnit IS NULL
             """)
-    List<ReceivedUnitJpa> findAllByWorkerSessionIdAndParentUnitIsNull(UUID workerSessionId);
+    List<ReceivedUnitJpa> findAllByWorkerSessionIdAndParentUnitIsNull(@Param("workerSessionId") UUID workerSessionId);
 
     List<ReceivedUnitJpa> findAllByReceiptId(UUID receiptId);
+
+    @Query("""
+        select
+                count(u) 
+        from 
+                ReceivedUnitJpa u 
+        join 
+                WorkerReceivingSessionJpa s 
+        on
+                u.workerSessionId = s.id 
+        where 
+                s.workerId = :workerId
+""")
+    long countUnitsScannedByWorkerId(@Param("workerId") UUID workerId);
 }

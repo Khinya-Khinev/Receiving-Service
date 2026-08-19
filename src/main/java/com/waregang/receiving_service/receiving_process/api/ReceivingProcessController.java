@@ -2,6 +2,7 @@ package com.waregang.receiving_service.receiving_process.api;
 
 import com.waregang.receiving_service.receiving_process.api.dto.*;
 import com.waregang.receiving_service.receiving_process.application.ReceivingProcessService;
+import com.waregang.receiving_service.receiving_process.domain.model.WorkerReceivingSession;
 import com.waregang.receiving_service.security.UserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -85,6 +86,22 @@ public class ReceivingProcessController {
             @AuthenticationPrincipal UserPrincipal worker
     ) {
         SkuInAsnResponse response = service.checkIfSkuInAsn(worker, sku);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/worker-sessions/{user-id}")
+    public ResponseEntity<WorkerReceivingSessionResponse> getCurrentSessionInfo(
+            @PathVariable("user-id") String userId
+    ){
+        WorkerReceivingSessionResponse response = service.getCurrentSession(UUID.fromString(userId));
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/statistics/{user-id}")
+    public ResponseEntity<WorkerStatisticsResponse> getWorkerStatistics(
+            @PathVariable("user-id") String userId
+    ){
+        WorkerStatisticsResponse response = service.getWorkerStatistics(UUID.fromString(userId));
         return ResponseEntity.ok(response);
     }
 }

@@ -5,6 +5,8 @@ import com.waregang.receiving_service.receiving_process.infrastructure.jpa_entit
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -28,5 +30,17 @@ public interface WorkerReceivingSessionRepositoryJpa extends JpaRepository<Worke
     boolean existsByReceiptIdAndStatus(
             UUID receiptId,
             WorkerReceivingSessionStatus workerReceivingSessionStatus);
+
+    @Query("""
+            select 
+                    count(distinct s.receiptId) 
+            from 
+                    WorkerReceivingSessionJpa s 
+            where 
+                    s.workerId = :workerId 
+            and 
+                    s.status = 'COMPLETED'
+                                """)
+    long countCompletedReceiptsByWorkerId(@Param("workerId") UUID workerId);
 
 }
