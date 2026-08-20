@@ -1,7 +1,6 @@
 package com.waregang.receiving_service.test_utils;
 
 import com.redis.testcontainers.RedisContainer;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -20,19 +19,14 @@ import org.testcontainers.utility.DockerImageName;
 @Testcontainers
 public abstract class BaseIT {
 
-    private static final Dotenv dotenv = Dotenv.configure()
-            .filename(".env")
-            .ignoreIfMissing()
-            .load();
+    private static final String POSTGRES_VERSION = "16-alpine";
+    private static final String DB_NAME = "receivingdb";
+    private static final String DB_USER = "receiving_user";
+    private static final String DB_PASSWORD = "password";
 
-    private static final String POSTGRES_VERSION = dotenv.get("POSTGRES_VERSION");
-    private static final String DB_NAME = dotenv.get("DB_NAME");
-    private static final String DB_USER = dotenv.get("DB_USER");
-    private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
+    private static final String REDIS_VERSION = "7.4-alpine";
 
-    private static final String REDIS_VERSION = dotenv.get("REDIS_VERSION");
-
-    private static final String KAFKA_VERSION = dotenv.get("KAFKA_VERSION");
+    private static final String KAFKA_VERSION = "4.3.1";
 
     @Container
     @ServiceConnection

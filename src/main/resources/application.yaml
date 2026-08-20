@@ -2,19 +2,6 @@ spring:
   application:
     name: receiving-service
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health
-  health:
-    redis:
-      enabled: false
-
-logging:
-  level:
-    org.springframework.web: DEBUG
-
   security:
     oauth2:
       resourceserver:
@@ -43,3 +30,16 @@ logging:
   mvc:
     problemdetails:
       enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  health:
+    redis:
+      enabled: false
+
+logging:
+  level:
+    org.springframework.web: DEBUG

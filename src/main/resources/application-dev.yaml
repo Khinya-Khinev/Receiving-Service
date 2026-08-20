@@ -24,10 +24,9 @@ spring:
         retry.backoff.ms: 1000
         spring.json.add.type.headers: false
 
-
-
 springdoc:
   api-docs:
-    enabled: true
+    path: /v3/api-docs/receiving-service
   swagger-ui:
-    enabled: true
+    enabled: false
+
