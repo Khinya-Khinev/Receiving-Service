@@ -1,6 +1,5 @@
 package com.waregang.receiving_service.test_utils;
 
-import com.redis.testcontainers.RedisContainer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -24,8 +23,6 @@ public abstract class BaseIT {
     private static final String DB_USER = "receiving_user";
     private static final String DB_PASSWORD = "password";
 
-    private static final String REDIS_VERSION = "7.4-alpine";
-
     private static final String KAFKA_VERSION = "4.3.1";
 
     @Container
@@ -36,12 +33,6 @@ public abstract class BaseIT {
             .withDatabaseName(DB_NAME)
             .withUsername(DB_USER)
             .withPassword(DB_PASSWORD);
-
-    @Container
-    @ServiceConnection
-    private static final RedisContainer redis = new RedisContainer(
-            DockerImageName.parse("redis:" + REDIS_VERSION)
-    );
 
     @Container
     @ServiceConnection
