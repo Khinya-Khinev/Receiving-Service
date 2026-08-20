@@ -22,6 +22,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .servers(List.of(
                         new Server()
+                                // to avoid swagger sending requests on receiving-service:8080 (docker container name in network)
                                 .url("http://localhost:8080")
                                 .description("API Gateway")
                 ))
