@@ -61,7 +61,7 @@ public class ReceivedUnitRepositoryAdapter implements ReceivedUnitRepositoryPort
     }
 
     @Override
-    public long countUnitsScannedByWorkerId(UUID workerId) {
-        return jpaRepository.countUnitsScannedByWorkerId(workerId);
+    public long countUnitsScannedByWorkerId(UUID workerId, java.time.LocalDateTime startOfDay, java.time.LocalDateTime endOfDay) {
+        return jpaRepository.countUnitsScannedByWorkerId(workerId, startOfDay, endOfDay);
     }
 }

@@ -3,6 +3,11 @@ app:
     worker-receiving-session-repository-adapter: "jpa"
 
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AUTH_SERVER_ISSUER_URL} # responsible for verifying tokens
 
   kafka:
     bootstrap-servers: localhost:9092

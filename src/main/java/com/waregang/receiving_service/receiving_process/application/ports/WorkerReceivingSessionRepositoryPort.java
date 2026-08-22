@@ -12,7 +12,7 @@ public interface WorkerReceivingSessionRepositoryPort {
 
     boolean existsByWorkerIdAndStatus(UUID id, WorkerReceivingSessionStatus workerReceivingSessionStatus);
 
-    long countCompletedReceiptsByWorkerId(UUID workerId);
+    long countCompletedReceiptsByWorkerId(UUID workerId, java.time.LocalDateTime startOfDay, java.time.LocalDateTime endOfDay);
 
     WorkerReceivingSession save(WorkerReceivingSession session);
 

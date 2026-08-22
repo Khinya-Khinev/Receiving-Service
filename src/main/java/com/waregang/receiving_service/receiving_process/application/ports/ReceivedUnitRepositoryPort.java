@@ -13,6 +13,6 @@ public interface ReceivedUnitRepositoryPort {
     List<ReceivedUnit> findAllRootUnitsByWorkerSessionId(UUID workerSessionId);
     List<ReceivedUnit> findAllByReceiptId(UUID receiptId);
 
-    long countUnitsScannedByWorkerId(UUID workerId);
+    long countUnitsScannedByWorkerId(UUID workerId, java.time.LocalDateTime startOfDay, java.time.LocalDateTime endOfDay);
 
 }

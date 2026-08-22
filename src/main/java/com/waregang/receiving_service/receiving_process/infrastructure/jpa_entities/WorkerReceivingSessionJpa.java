@@ -7,6 +7,7 @@ import lombok.*;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Persistable;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -54,6 +55,12 @@ public class WorkerReceivingSessionJpa implements Persistable<UUID> {
     @Column(name = "current_unit_id")
     private UUID currentUnitId;
 
+    @Column(name = "started_at", nullable = false, updatable = false)
+    private java.time.LocalDateTime startedAt;
+
+    @Column(name = "completed_at")
+    private java.time.@org.jspecify.annotations.Nullable LocalDateTime completedAt;
+
     private WorkerReceivingSessionJpa(
             UUID id,
             UUID workerId,
@@ -62,7 +69,9 @@ public class WorkerReceivingSessionJpa implements Persistable<UUID> {
             WorkerReceivingSessionStatus status,
             ReceivingMode receivingMode,
             @Nullable String currentUnitLpnPath,
-            @Nullable UUID currentUnitId
+            @Nullable UUID currentUnitId,
+            java.time.LocalDateTime startedAt,
+            @Nullable LocalDateTime completedAt
     ) {
         this.id = id;
         this.workerId = workerId;
@@ -72,6 +81,8 @@ public class WorkerReceivingSessionJpa implements Persistable<UUID> {
         this.receivingMode = receivingMode;
         this.currentUnitLpnPath = currentUnitLpnPath;
         this.currentUnitId = currentUnitId;
+        this.startedAt = startedAt;
+        this.completedAt = completedAt;
     }
 
     public static WorkerReceivingSessionJpa toJpaEntity(
@@ -82,7 +93,9 @@ public class WorkerReceivingSessionJpa implements Persistable<UUID> {
             WorkerReceivingSessionStatus status,
             ReceivingMode receivingMode,
             String currentUnitLpnPath,
-            UUID currentUnitId
+            UUID currentUnitId,
+            java.time.LocalDateTime startedAt,
+            @Nullable LocalDateTime completedAt
     ) {
         return new WorkerReceivingSessionJpa(
                 id,
@@ -92,7 +105,9 @@ public class WorkerReceivingSessionJpa implements Persistable<UUID> {
                 status,
                 receivingMode,
                 currentUnitLpnPath,
-                currentUnitId
+                currentUnitId,
+                startedAt,
+                completedAt
         );
     }
 

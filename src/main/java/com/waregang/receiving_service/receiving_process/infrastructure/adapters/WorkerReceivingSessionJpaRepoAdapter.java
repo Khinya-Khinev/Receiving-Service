@@ -97,8 +97,8 @@ public class WorkerReceivingSessionJpaRepoAdapter implements WorkerReceivingSess
     }
 
     @Override
-    public long countCompletedReceiptsByWorkerId(UUID workerId) {
-        return repositoryJpa.countCompletedReceiptsByWorkerId(workerId);
+    public long countCompletedReceiptsByWorkerId(UUID workerId, java.time.LocalDateTime startOfDay, java.time.LocalDateTime endOfDay) {
+        return repositoryJpa.countCompletedReceiptsByWorkerId(workerId, startOfDay, endOfDay);
     }
 
 }

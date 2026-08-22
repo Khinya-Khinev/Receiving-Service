@@ -34,6 +34,10 @@ public interface ReceivedUnitRepositoryJpa extends JpaRepository<ReceivedUnitJpa
                 u.workerSessionId = s.id 
         where 
                 s.workerId = :workerId
+        and
+                s.completedAt BETWEEN :startOfDay AND :endOfDay
 """)
-    long countUnitsScannedByWorkerId(@Param("workerId") UUID workerId);
+    long countUnitsScannedByWorkerId(@Param("workerId") UUID workerId,
+                                     @Param("startOfDay") java.time.LocalDateTime startOfDay,
+                                     @Param("endOfDay") java.time.LocalDateTime endOfDay);
 }

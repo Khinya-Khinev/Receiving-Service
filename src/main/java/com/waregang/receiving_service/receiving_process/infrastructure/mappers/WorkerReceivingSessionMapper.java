@@ -18,7 +18,9 @@ public class WorkerReceivingSessionMapper {
                 jpa.getStatus(),
                 jpa.getReceivingMode(),
                 jpa.getCurrentUnitLpnPath(),
-                jpa.getCurrentUnitId()
+                jpa.getCurrentUnitId(),
+                jpa.getStartedAt(),
+                jpa.getCompletedAt()
         );
     }
 
@@ -31,7 +33,9 @@ public class WorkerReceivingSessionMapper {
                 domain.getStatus(),
                 domain.getReceivingMode(),
                 domain.getCurrentUnitLpnPath(),
-                domain.getCurrentUnitId()
+                domain.getCurrentUnitId(),
+                domain.getStartedAt(),
+                domain.getCompletedAt()
         );
     }
 

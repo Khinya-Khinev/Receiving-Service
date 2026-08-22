@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -99,9 +100,11 @@ public class ReceivingProcessController {
 
     @GetMapping("/statistics/{user-id}")
     public ResponseEntity<WorkerStatisticsResponse> getWorkerStatistics(
-            @PathVariable("user-id") String userId
+            @PathVariable("user-id") String userId,
+            @RequestParam(required = false) LocalDate date
     ){
-        WorkerStatisticsResponse response = service.getWorkerStatistics(UUID.fromString(userId));
+        java.time.LocalDate queryDate = (date != null) ? date : java.time.LocalDate.now();
+        WorkerStatisticsResponse response = service.getWorkerStatistics(UUID.fromString(userId), queryDate);
         return ResponseEntity.ok(response);
     }
 }

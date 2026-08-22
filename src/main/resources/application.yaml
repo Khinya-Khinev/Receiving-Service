@@ -2,12 +2,6 @@ spring:
   application:
     name: receiving-service
 
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${AUTH_SERVER_ISSUER_URL} # responsible for verifying tokens
-
   profiles:
     active: ${SPRING_PROFILES_ACTIVE}
 

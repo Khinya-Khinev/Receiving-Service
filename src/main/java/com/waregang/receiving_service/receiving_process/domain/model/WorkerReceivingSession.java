@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jspecify.annotations.Nullable;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -27,6 +28,8 @@ public class WorkerReceivingSession extends AggregateRoot {
     private ReceivingMode receivingMode;
     private String currentUnitLpnPath;
     private UUID currentUnitId;
+    private java.time.LocalDateTime startedAt;
+    private java.time.@org.jspecify.annotations.Nullable LocalDateTime completedAt;
 
     private WorkerReceivingSession(
             UserPrincipal user,
@@ -40,6 +43,7 @@ public class WorkerReceivingSession extends AggregateRoot {
         this.status = WorkerReceivingSessionStatus.IN_PROCESS;
         this.receivingMode = receivingMode;
         this.inboundDeliveryId = inboundDeliveryId;
+        this.startedAt = java.time.LocalDateTime.now();
     }
 
     public static WorkerReceivingSession createWithBundledWorker(
@@ -59,7 +63,9 @@ public class WorkerReceivingSession extends AggregateRoot {
             WorkerReceivingSessionStatus status,
             ReceivingMode receivingMode,
             String currentUnitLpnPath,
-            UUID currentUnitId
+            UUID currentUnitId,
+            java.time.LocalDateTime startedAt,
+            @Nullable LocalDateTime completedAt
     ) {
         var session = new WorkerReceivingSession();
         session.id = id;
@@ -70,6 +76,8 @@ public class WorkerReceivingSession extends AggregateRoot {
         session.receivingMode = receivingMode;
         session.currentUnitLpnPath = currentUnitLpnPath;
         session.currentUnitId = currentUnitId;
+        session.startedAt = startedAt;
+        session.completedAt = completedAt;
         return session;
     }
 
@@ -126,6 +134,7 @@ public class WorkerReceivingSession extends AggregateRoot {
         this.status = WorkerReceivingSessionStatus.COMPLETED;
         this.currentUnitLpnPath = null;
         this.currentUnitId = null;
+        this.completedAt = java.time.LocalDateTime.now();
 
         registerEvent(new WorkerSessionClosedEvent(this.id));
     }

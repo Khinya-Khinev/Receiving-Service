@@ -17,6 +17,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -173,9 +174,12 @@ public class ReceivingProcessService {
     }
 
     @Transactional(readOnly = true)
-    public WorkerStatisticsResponse getWorkerStatistics(UUID workerId) {
-        long receiptsCount = workerSessionRepository.countCompletedReceiptsByWorkerId(workerId);
-        long unitsScannedCount = receivedUnitRepository.countUnitsScannedByWorkerId(workerId);
+    public WorkerStatisticsResponse getWorkerStatistics(UUID workerId, java.time.LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(java.time.LocalTime.MAX);
+
+        long receiptsCount = workerSessionRepository.countCompletedReceiptsByWorkerId(workerId, startOfDay, endOfDay);
+        long unitsScannedCount = receivedUnitRepository.countUnitsScannedByWorkerId(workerId, startOfDay, endOfDay);
 
         return new WorkerStatisticsResponse(receiptsCount, unitsScannedCount);
     }

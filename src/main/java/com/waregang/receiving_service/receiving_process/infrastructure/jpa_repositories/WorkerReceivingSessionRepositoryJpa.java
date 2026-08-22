@@ -40,7 +40,11 @@ public interface WorkerReceivingSessionRepositoryJpa extends JpaRepository<Worke
                     s.workerId = :workerId 
             and 
                     s.status = 'COMPLETED'
+            and
+                    s.completedAt between :startOfDay and :endOfDay
                                 """)
-    long countCompletedReceiptsByWorkerId(@Param("workerId") UUID workerId);
+    long countCompletedReceiptsByWorkerId(@Param("workerId") UUID workerId,
+                                          @Param("startOfDay") java.time.LocalDateTime startOfDay,
+                                          @Param("endOfDay") java.time.LocalDateTime endOfDay);
 
 }
