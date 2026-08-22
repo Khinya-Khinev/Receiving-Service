@@ -30,6 +30,7 @@ import com.waregang.receiving_service.test_utils.mothers.UserPrincipalMother;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDateTime;
@@ -43,6 +44,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@SpringBootTest(properties = {
+        "spring.autoconfigure.exclude=" +
+                "org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration," +
+                "org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration"
+})
 public class FullReceivingProcessIT extends BaseIT {
 
     @Autowired private GoodsReceiptService goodsReceiptService;

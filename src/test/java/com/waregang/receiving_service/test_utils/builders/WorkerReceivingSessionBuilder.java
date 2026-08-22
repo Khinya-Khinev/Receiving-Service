@@ -4,7 +4,9 @@ import com.waregang.receiving_service.receiving_process.domain.model.ReceivingMo
 import com.waregang.receiving_service.receiving_process.domain.model.WorkerReceivingSession;
 import com.waregang.receiving_service.receiving_process.domain.model.WorkerReceivingSessionStatus;
 import com.waregang.receiving_service.security.UserPrincipal;
+import org.jspecify.annotations.Nullable;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class WorkerReceivingSessionBuilder {
@@ -16,6 +18,9 @@ public class WorkerReceivingSessionBuilder {
     private ReceivingMode receivingMode = ReceivingMode.ASN_MATCHING;
     private String currentUnitLpnPath = null;
     private UUID currentUnitId = null;
+    private LocalDateTime startedAt = LocalDateTime.now();
+    @Nullable
+    private LocalDateTime completedAt = null;
 
     public static WorkerReceivingSessionBuilder aWorkerSession() {
         return new WorkerReceivingSessionBuilder();
@@ -31,6 +36,11 @@ public class WorkerReceivingSessionBuilder {
         return this;
     }
 
+    public WorkerReceivingSessionBuilder withStatus(WorkerReceivingSessionStatus status) {
+        this.status = status;
+        return this;
+    }
+
     public WorkerReceivingSessionBuilder withReceiptId(UUID receiptId) {
         this.receiptId = receiptId;
         return this;
@@ -41,8 +51,9 @@ public class WorkerReceivingSessionBuilder {
         return this;
     }
 
-    public WorkerReceivingSessionBuilder withStatus(WorkerReceivingSessionStatus status) {
-        this.status = status;
+    public WorkerReceivingSessionBuilder withCurrentUnit(String lpnPath, UUID currentUnitId) {
+        this.currentUnitLpnPath = lpnPath;
+        this.currentUnitId = currentUnitId;
         return this;
     }
 
@@ -50,23 +61,22 @@ public class WorkerReceivingSessionBuilder {
         this.receivingMode = receivingMode;
         return this;
     }
+    
+    public WorkerReceivingSessionBuilder withStartedAt(LocalDateTime startedAt) {
+        this.startedAt = startedAt;
+        return this;
+    }
 
-    public WorkerReceivingSessionBuilder withCurrentUnit(String lpnPath, UUID currentUnitId) {
-        this.currentUnitLpnPath = lpnPath;
-        this.currentUnitId = currentUnitId;
+    public WorkerReceivingSessionBuilder withCompletedAt(@Nullable LocalDateTime completedAt) {
+        this.completedAt = completedAt;
         return this;
     }
 
     public WorkerReceivingSession build() {
         return WorkerReceivingSession.reconstitute(
                 id, workerId, receiptId, inboundDeliveryId, status,
-                receivingMode, currentUnitLpnPath, currentUnitId
-        );
-    }
-
-    public WorkerReceivingSession buildWithUser(UserPrincipal user) {
-        return WorkerReceivingSession.createWithBundledWorker(
-                user, receiptId, receivingMode, inboundDeliveryId
+                receivingMode, currentUnitLpnPath, currentUnitId,
+                startedAt, completedAt
         );
     }
 }
