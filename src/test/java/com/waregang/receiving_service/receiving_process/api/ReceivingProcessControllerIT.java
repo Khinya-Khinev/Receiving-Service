@@ -1,8 +1,7 @@
 package com.waregang.receiving_service.receiving_process.api;
 
-import com.waregang.receiving_service.common.exception_handling.WebExceptionHandlingTestConfig;
+import com.waregang.receiving_service.common.exception_handling.IntegrationMvcTestConfig;
 import com.waregang.receiving_service.receiving_process.application.ReceivingProcessService;
-import com.waregang.receiving_service.test_utils.BaseIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -19,7 +18,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
-@Import(WebExceptionHandlingTestConfig.class)
+@Import(IntegrationMvcTestConfig.class)
 
 @WebMvcTest(ReceivingProcessController.class)
 class ReceivingProcessControllerIT {

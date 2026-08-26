@@ -9,4 +9,4 @@ import org.springframework.context.annotation.Import;
         ProblemDetailSimpleFactory.class,
         MessageSourceConfig.class,
 })
-public class WebExceptionHandlingTestConfig {}
+public class IntegrationMvcTestConfig {}

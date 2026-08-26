@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @ActiveProfiles("test")
-@Import(WebExceptionHandlingTestConfig.class)
+@Import(IntegrationMvcTestConfig.class)
 
 @WebMvcTest(GoodsReceiptController.class)
 @WithMockUser(authorities = "MANAGER")
