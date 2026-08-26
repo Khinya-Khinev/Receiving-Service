@@ -57,11 +57,11 @@ INSERT INTO contents (id, container_unit_id, sku, quantity) VALUES
 -- 5. GOODS RECEIPTS
 -- =============================================
 INSERT INTO goods_receipts (id, asn_id, manager_id, gate_number, receiving_status, warehouse_id, receiving_mode) VALUES
-                                                                                                     ('f1111111-1111-1111-1111-111111111111', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '11111111-1111-1111-1111-111111111111', 'GATE-A1', 'COMPLETED', 'WH-001', 'ASN_MATCHING'),
-                                                                                                     ('f2222222-2222-2222-2222-222222222222', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '11111111-1111-1111-1111-111111111111', 'GATE-B2', 'IN_PROGRESS', 'WH-001', 'ASN_MATCHING'),
-                                                                                                     ('f3333333-3333-3333-3333-333333333333', 'cccccccc-cccc-cccc-cccc-cccccccccccc', '55555555-5555-5555-5555-555555555555', 'GATE-C3', 'COMPLETED', 'WH-002', 'ASN_MATCHING'),
-                                                                                                     ('f4444444-4444-4444-4444-444444444444', 'dddddddd-dddd-dddd-dddd-dddddddddddd', '55555555-5555-5555-5555-555555555555', 'GATE-D4', 'COMPLETED', 'WH-002', 'ASN_MATCHING'),
-                                                                                                     ('f5555555-5555-5555-5555-555555555555', 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '11111111-1111-1111-1111-111111111111', 'GATE-E5', 'PENDING', 'WH-001', 'ASN_MATCHING');
+                                                                                                     ('f1111111-1111-1111-1111-111111111111', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '11111111-1111-1111-1111-111111111111', 'GATE-A1', 'OPEN', 'WH-001', 'ASN_MATCHING'),
+                                                                                                     ('f2222222-2222-2222-2222-222222222222', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '11111111-1111-1111-1111-111111111111', 'GATE-B2', 'CLOSED', 'WH-001', 'ASN_MATCHING'),
+                                                                                                     ('f3333333-3333-3333-3333-333333333333', 'cccccccc-cccc-cccc-cccc-cccccccccccc', '55555555-5555-5555-5555-555555555555', 'GATE-C3', 'CLOSED', 'WH-002', 'ASN_MATCHING'),
+                                                                                                     ('f4444444-4444-4444-4444-444444444444', 'dddddddd-dddd-dddd-dddd-dddddddddddd', '55555555-5555-5555-5555-555555555555', 'GATE-D4', 'CLOSED', 'WH-002', 'ASN_MATCHING'),
+                                                                                                     ('f5555555-5555-5555-5555-555555555555', 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '11111111-1111-1111-1111-111111111111', 'GATE-E5', , 'OPEN',, 'WH-001', 'ASN_MATCHING');
 
 -- =============================================
 -- 6. WORKER RECEIVING SESSIONS
