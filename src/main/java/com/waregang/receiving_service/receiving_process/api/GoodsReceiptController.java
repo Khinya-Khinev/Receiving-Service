@@ -1,14 +1,18 @@
 package com.waregang.receiving_service.receiving_process.api;
 
-import com.waregang.receiving_service.receiving_process.api.dto.GetReceiptsResponse;
 import com.waregang.receiving_service.receiving_process.api.dto.GoodsReceiptDetailsResponse;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingRequest;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingResponse;
 import com.waregang.receiving_service.receiving_process.application.GoodsReceiptService;
+import com.waregang.receiving_service.receiving_process.domain.dto.GoodsReceiptDto;
 import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceiptStatus;
 import com.waregang.receiving_service.security.UserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,19 +51,25 @@ public class GoodsReceiptController {
         return ResponseEntity.ok().build();
     }
 
-// TODO: add Pageable
+
     @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('WORKER')")
     @GetMapping
-    public ResponseEntity<GetReceiptsResponse> getGoodsReceipts(
-            @RequestParam(name = "status", required = false) GoodsReceiptStatus receiptStatus,
-            @AuthenticationPrincipal UserPrincipal user
-    ) {
-        GetReceiptsResponse response = service.findAllByStatusAndWarehouseId(user.warehouseId(), receiptStatus);
+    public ResponseEntity<Page<GoodsReceiptDto>> getGoodsReceipts(
+            @PageableDefault(
+                    size = 10,
+                    page = 0,
+                    direction = Sort.Direction.DESC
+            ) Pageable pageable,
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+            @RequestParam(name = "status", required = false)
+            GoodsReceiptStatus receiptStatus,
+
+            @AuthenticationPrincipal
+            UserPrincipal user
+    ) {
+        return ResponseEntity.ok(service.findGoodsReceipts(user, receiptStatus, pageable));
     }
 
-    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('WORKER')")
     @GetMapping("/{receipt-id}/received-units")
     public ResponseEntity<GoodsReceiptDetailsResponse> getReceiptDetails(
             @PathVariable(value = "receipt-id") UUID receiptId

@@ -12,6 +12,9 @@ import com.waregang.receiving_service.receiving_process.infrastructure.jpa_repos
 import com.waregang.receiving_service.receiving_process.infrastructure.mappers.GoodsReceiptMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -59,8 +62,8 @@ public class GoodsReceiptJpaRepoAdapter implements GoodsReceiptRepositoryPort {
     }
 
     @Override
-    public List<GoodsReceiptDto> findAllDtosByStatusAndWarehouseId(GoodsReceiptStatus receiptStatus, String warehouseId) {
-        return repositoryJpa.findAllDtosByStatusAndWarehouseId(receiptStatus, warehouseId);
+    public Page<GoodsReceiptJpa> findAll(Specification<GoodsReceiptJpa> spec, Pageable pageable) {
+        return repositoryJpa.findAll(spec, pageable);
     }
 
     @Override

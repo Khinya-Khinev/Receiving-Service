@@ -16,7 +16,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface AdvancedShippingNoticeRepositoryJpa extends JpaRepository<AdvancedShippingNoticeJpa, UUID>, JpaSpecificationExecutor<AdvancedShippingNoticeJpa> {
+public interface AdvancedShippingNoticeRepositoryJpa extends
+        JpaRepository<AdvancedShippingNoticeJpa, UUID>,
+        JpaSpecificationExecutor<AdvancedShippingNoticeJpa>
+{
     Optional<AdvancedShippingNoticeJpa> findByAsnNumber(String asn);
 
     @Query("""

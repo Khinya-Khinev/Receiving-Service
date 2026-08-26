@@ -2,7 +2,7 @@ package com.waregang.receiving_service.receiving_process.application;
 
 import com.waregang.receiving_service.common.exception_handling.AppException;
 import com.waregang.receiving_service.common.exception_handling.error_code.ReceivingErrorCode;
-import com.waregang.receiving_service.receiving_process.api.dto.GetReceiptsResponse;
+import com.waregang.receiving_service.receiving_process.api.dto.GetOpenedReceiptsResponse;
 import com.waregang.receiving_service.receiving_process.api.dto.GoodsReceiptDetailsResponse;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingRequest;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingResponse;
@@ -16,9 +16,14 @@ import com.waregang.receiving_service.receiving_process.application.ports.AsnInf
 import com.waregang.receiving_service.receiving_process.application.ports.GoodsReceiptRepositoryPort;
 import com.waregang.receiving_service.receiving_process.application.ports.ReceivedUnitRepositoryPort;
 import com.waregang.receiving_service.receiving_process.application.ports.WorkerReceivingSessionRepositoryPort;
+import com.waregang.receiving_service.receiving_process.infrastructure.jpa_entities.GoodsReceiptJpa;
+import com.waregang.receiving_service.receiving_process.infrastructure.specifications.GoodsReceiptSpecification;
 import com.waregang.receiving_service.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,11 +97,25 @@ public class GoodsReceiptService {
     }
 
     @Transactional(readOnly = true)
-    public GetReceiptsResponse findAllByStatusAndWarehouseId(String whId, GoodsReceiptStatus receiptStatus) {
-        List<GoodsReceiptDto> receipts = goodsReceiptRepositoryPort
-                .findAllDtosByStatusAndWarehouseId(receiptStatus, whId);
+    public Page<GoodsReceiptDto> findGoodsReceipts(UserPrincipal user, GoodsReceiptStatus status, Pageable pageable) {
+        var spec = Specification
+                .where(GoodsReceiptSpecification.hasStatus(status))
+                .and(GoodsReceiptSpecification.hasWarehouseId(user.warehouseId()));
 
-        return new GetReceiptsResponse(receipts);
+        Page<GoodsReceiptJpa> receipts = goodsReceiptRepositoryPort.findAll(spec, pageable);
+
+        // N+1 issue here because we need ReceivingMode from ASN.
+        // For now, I will just return DTO without full ASN info if I cannot easily join.
+        // Or I can fetch ASN info.
+        return receipts.map(jpa -> new GoodsReceiptDto(
+                jpa.getId(),
+                jpa.getStatus(),
+                jpa.getWarehouseId(),
+                jpa.getGateNumber(),
+                jpa.getManagerId(),
+                null, // ReceivingMode
+                jpa.getAsnId()
+        ));
     }
 
     @Transactional(readOnly = true)
