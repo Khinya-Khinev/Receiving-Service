@@ -42,10 +42,33 @@ class AdvancedShippingNoticeControllerTest {
         when(advancedShippingNoticeService.createAsn(any(CreateAsnRequest.class)))
                 .thenReturn(new CreateAsnResponse(UUID.randomUUID()));
 
+        String jsonBody = """
+                {
+                  "externalId": "ext1",
+                  "asnNumber": "asn1",
+                  "warehouseId": "wh1",
+                  "vendorName": "vendor1",
+                  "expectedArrivalDate": "2026-09-27T10:00:00",
+                  "unitRequests": [
+                    {
+                      "type": "type1",
+                      "lpn": "lpn1"
+                    }
+                  ],
+                  "contents": [
+                    {
+                      "parentLpn": "lpn1",
+                      "sku": "sku1",
+                      "quantity": 1
+                    }
+                  ]
+                }
+                """;
+
         mockMvcTester.post().uri("/api/receiving-service/asns")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"externalId\":\"ext1\",\"asnNumber\":\"asn1\",\"warehouseId\":\"wh1\",\"vendorName\":\"vendor1\",\"expectedArrivalDate\":\"2026-09-27T10:00:00\",\"unitRequests\":[{\"type\":\"type1\",\"lpn\":\"lpn1\"}],\"contents\":[{\"parentLpn\":\"lpn1\",\"sku\":\"sku1\",\"quantity\":1}]}")
+                .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .assertThat()
                 .hasStatus(HttpStatus.CREATED);
