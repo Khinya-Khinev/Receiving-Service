@@ -4,7 +4,7 @@ import com.waregang.receiving_service.receiving_process.domain.dto.GoodsReceiptD
 
 import java.util.List;
 
-public record GetOpenedReceiptsResponse(
+public record GetReceiptsResponse(
         List<GoodsReceiptDto> receipts
 ) {
 }

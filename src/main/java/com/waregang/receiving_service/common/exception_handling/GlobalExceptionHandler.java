@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Slf4j
@@ -48,6 +50,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.warn("Handling constraint violation exception: {}. Violations: {}", validationException.getMessage(), validationException.getConstraintViolations(), validationException);
         return problemDetailFactory.create(validationException);
     }
+// commented out: ill test it in swagger later - does superclass handles them as i want tp
+
+//    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+//    ProblemDetail handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+//        log.warn("Handling type mismatch exception: parameter '{}' rejected value '{}'", ex.getName(), ex.getValue(), ex);
+//        return problemDetailFactory.create(ex);
+//    }
 
     @ExceptionHandler(Exception.class)
     ProblemDetail handleGenericException(Exception genericException) {
@@ -78,4 +87,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.warn("Handling data integrity violation: {}", ex.getMessage(), ex);
         return problemDetailFactory.create(ex);
     }
+
+//    @ExceptionHandler(PropertyReferenceException.class)
+//    ProblemDetail handlePropertyReference(PropertyReferenceException ex) {
+//        log.warn("Handling invalid sort property: {}", ex.getMessage(), ex);
+//        return problemDetailFactory.create(ex);
+//    }
 }

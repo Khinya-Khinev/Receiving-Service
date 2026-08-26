@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -16,14 +17,15 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.net.URI;
 import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-
 @Component
 @RequiredArgsConstructor
 public class ProblemDetailSimpleFactory {
@@ -78,9 +80,7 @@ public class ProblemDetailSimpleFactory {
                 "Authentication failed",
                 authenticationException.getMessage()
         );
-
     }
-
 
     public ProblemDetail create(ObjectOptimisticLockingFailureException optimisticLockException) {
         return baseProblemDetail(
@@ -88,7 +88,6 @@ public class ProblemDetailSimpleFactory {
                 "Smth wrong: try again :(",
                 optimisticLockException.getMessage()
         );
-
     }
 
     public ProblemDetail create(DataIntegrityViolationException ex) {
@@ -99,13 +98,40 @@ public class ProblemDetailSimpleFactory {
         );
     }
 
-    public ProblemDetail create(Exception e) {
-        return switch (e) {
-            case MethodArgumentNotValidException ex -> buildValidationPD(extractErrors(ex));
-            case ConstraintViolationException ex -> buildValidationPD(extractErrors(ex));
+    /**
+     * MethodArgumentTypeMismatchException fires both for genuinely bad client input
+     * (bad UUID, bad enum, bad date string) and for converter-side bugs. Only the
+     * former is a 400 - anything else is a real server error.
+     */
+    public ProblemDetail create(MethodArgumentTypeMismatchException ex) {
+        Throwable cause = ex.getMostSpecificCause();
 
-            default -> baseProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Server Error", ":(");
-        };
+        if (!isSimpleConversionFailure(cause)) {
+            log.error("Unexpected failure converting parameter '{}' with value '{}'",
+                    ex.getName(), safeValue(ex), ex);
+            return baseProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Server Error", ":(");
+        }
+
+        String requiredType = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "expected type";
+        String message = "Invalid value '%s' for parameter '%s', expected %s"
+                .formatted(safeValue(ex), ex.getName(), requiredType);
+
+        return buildValidationPD(Map.of(ex.getName(), message));
+    }
+
+    private boolean isSimpleConversionFailure(Throwable cause) {
+        return cause instanceof IllegalArgumentException
+                || cause instanceof NumberFormatException
+                || cause instanceof DateTimeParseException;
+    }
+
+    private String safeValue(MethodArgumentTypeMismatchException ex) {
+        Object value = ex.getValue();
+        return value != null ? value.toString() : "null";
+    }
+
+    public ProblemDetail create(Exception e) {
+        return baseProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Server Error", ":(");
     }
 
     private ProblemDetail buildValidationPD(Map<String, String> errors) {
@@ -133,4 +159,17 @@ public class ProblemDetailSimpleFactory {
         return existing + " | " + replacement;
     }
 
+    public ProblemDetail create(MethodArgumentNotValidException ex) {
+        return buildValidationPD(extractErrors(ex));
+    }
+
+    public ProblemDetail create(ConstraintViolationException ex) {
+        return buildValidationPD(extractErrors(ex));
+    }
+
+    public ProblemDetail create(PropertyReferenceException ex) {
+        return buildValidationPD(Map.of(
+                ex.getPropertyName(), "Unknown sort property '%s'".formatted(ex.getPropertyName())
+        ));
+    }
 }

@@ -2,7 +2,7 @@ package com.waregang.receiving_service.receiving_process.application;
 
 import com.waregang.receiving_service.common.exception_handling.AppException;
 import com.waregang.receiving_service.common.exception_handling.error_code.ReceivingErrorCode;
-import com.waregang.receiving_service.receiving_process.api.dto.GetOpenedReceiptsResponse;
+import com.waregang.receiving_service.receiving_process.api.dto.GetReceiptsResponse;
 import com.waregang.receiving_service.receiving_process.api.dto.GoodsReceiptDetailsResponse;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingRequest;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingResponse;
@@ -92,11 +92,11 @@ public class GoodsReceiptService {
     }
 
     @Transactional(readOnly = true)
-    public GetOpenedReceiptsResponse findAllByStatus(UserPrincipal user, GoodsReceiptStatus receiptStatus) {
+    public GetReceiptsResponse findAllByStatusAndWarehouseId(String whId, GoodsReceiptStatus receiptStatus) {
         List<GoodsReceiptDto> receipts = goodsReceiptRepositoryPort
-                .findAllDtosByStatusAndWarehouseId(receiptStatus, user.warehouseId());
+                .findAllDtosByStatusAndWarehouseId(receiptStatus, whId);
 
-        return new GetOpenedReceiptsResponse(receipts);
+        return new GetReceiptsResponse(receipts);
     }
 
     @Transactional(readOnly = true)

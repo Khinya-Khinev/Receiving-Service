@@ -1,6 +1,6 @@
 package com.waregang.receiving_service.receiving_process.api;
 
-import com.waregang.receiving_service.receiving_process.api.dto.GetOpenedReceiptsResponse;
+import com.waregang.receiving_service.receiving_process.api.dto.GetReceiptsResponse;
 import com.waregang.receiving_service.receiving_process.api.dto.GoodsReceiptDetailsResponse;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingRequest;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingResponse;
@@ -20,8 +20,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 
 @RestController
-@RequestMapping("/api/receiving-service/goods-receipts")
+@RequestMapping(GoodsReceiptController.BASE_URL)
 public class GoodsReceiptController {
+    public static final String BASE_URL = "/api/receiving-service/goods-receipts";
     private final GoodsReceiptService service;
 
     @PostMapping
@@ -46,17 +47,19 @@ public class GoodsReceiptController {
         return ResponseEntity.ok().build();
     }
 
-
+// TODO: add Pageable
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('WORKER')")
     @GetMapping
-    public ResponseEntity<GetOpenedReceiptsResponse> getOpenedGoodsReceipts(
-            @RequestParam GoodsReceiptStatus receiptStatus,
+    public ResponseEntity<GetReceiptsResponse> getGoodsReceipts(
+            @RequestParam(name = "status", required = false) GoodsReceiptStatus receiptStatus,
             @AuthenticationPrincipal UserPrincipal user
     ) {
-        GetOpenedReceiptsResponse response = service.findAllByStatus(user, receiptStatus);
+        GetReceiptsResponse response = service.findAllByStatusAndWarehouseId(user.warehouseId(), receiptStatus);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('WORKER')")
     @GetMapping("/{receipt-id}/received-units")
     public ResponseEntity<GoodsReceiptDetailsResponse> getReceiptDetails(
             @PathVariable(value = "receipt-id") UUID receiptId
