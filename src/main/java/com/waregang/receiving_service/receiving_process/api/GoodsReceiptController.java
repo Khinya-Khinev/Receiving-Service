@@ -24,9 +24,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 
 @RestController
-@RequestMapping(GoodsReceiptController.BASE_URL)
+@RequestMapping("/api/receiving-service/goods-receipts")
 public class GoodsReceiptController {
-    public static final String BASE_URL = "/api/receiving-service/goods-receipts";
+
     private final GoodsReceiptService service;
 
     @PostMapping

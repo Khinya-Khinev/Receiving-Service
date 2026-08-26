@@ -3,6 +3,7 @@ package com.waregang.receiving_service.receiving_process.application;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingRequest;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingResponse;
 import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceipt;
+import com.waregang.receiving_service.receiving_process.domain.model.ReceivingMode;
 import com.waregang.receiving_service.receiving_process.domain.model.asn.AsnInfo;
 import com.waregang.receiving_service.receiving_process.application.ports.AsnInfoProviderPort;
 import com.waregang.receiving_service.receiving_process.application.ports.GoodsReceiptRepositoryPort;
@@ -46,7 +47,7 @@ class GoodsReceiptServiceTest {
     void shouldStartReceivingSuccessfully() {
         // Arrange
         String asnNumber = "ASN-123";
-        StartReceivingRequest request = new StartReceivingRequest(asnNumber, "GATE-01");
+        StartReceivingRequest request = new StartReceivingRequest(asnNumber, "GATE-01", ReceivingMode.ASN_MATCHING);
         
         AsnInfo asnInfo = new AsnInfo(
                 UUID.randomUUID(),

@@ -41,7 +41,6 @@ public class GoodsReceiptService {
     private final AsnInfoProviderPort asnInfoProvider;
 
     private final GoodsReceiptRepositoryPort goodsReceiptRepositoryPort;
-
     private final WorkerReceivingSessionRepositoryPort workerSessionRepository;
     private final ReceivedUnitRepositoryPort receivedUnitRepositoryPort;
 
@@ -56,7 +55,7 @@ public class GoodsReceiptService {
                 manager.id(),
                 asn.id(),
                 asn.warehouseId(),
-                asn.receivingMode(),
+                request.receivingMode(), // it can be different from ASN
                 asn.asnNumber(),
                 request.gateNumber()
         );
@@ -114,7 +113,7 @@ public class GoodsReceiptService {
                 jpa.getWarehouseId(),
                 jpa.getGateNumber(),
                 jpa.getManagerId(),
-                null, // ReceivingMode
+                jpa.getReceivingMode(),
                 jpa.getAsnId()
         ));
     }

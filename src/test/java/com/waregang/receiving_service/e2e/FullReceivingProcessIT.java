@@ -20,6 +20,7 @@ import com.waregang.receiving_service.receiving_process.application.GoodsReceipt
 import com.waregang.receiving_service.receiving_process.application.ReceivingProcessService;
 import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceipt;
 import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceiptStatus;
+import com.waregang.receiving_service.receiving_process.domain.model.ReceivingMode;
 import com.waregang.receiving_service.receiving_process.domain.model.WorkerReceivingSession;
 import com.waregang.receiving_service.receiving_process.domain.model.WorkerReceivingSessionStatus;
 import com.waregang.receiving_service.receiving_process.application.ports.GoodsReceiptRepositoryPort;
@@ -87,7 +88,7 @@ public class FullReceivingProcessIT extends BaseIT {
         UUID asnId = createResponse.asnId();
 
         // 3. Открытие документа приемки
-        StartReceivingRequest startRequest = new StartReceivingRequest(asnNumber, "GATE-01");
+        StartReceivingRequest startRequest = new StartReceivingRequest(asnNumber, "GATE-01", ReceivingMode.ASN_MATCHING);
         StartReceivingResponse startResponse = goodsReceiptService.startReceiving(startRequest, manager);
         UUID receiptId = startResponse.receiptId();
 
@@ -174,7 +175,7 @@ public class FullReceivingProcessIT extends BaseIT {
         UUID asnId = createResponse.asnId();
 
         // 3. Открытие документа приемки
-        StartReceivingRequest startRequest = new StartReceivingRequest(asnNumber, "GATE-02");
+        StartReceivingRequest startRequest = new StartReceivingRequest(asnNumber, "GATE-02", ReceivingMode.ASN_MATCHING);
         StartReceivingResponse startResponse = goodsReceiptService.startReceiving(startRequest, manager);
         UUID receiptId = startResponse.receiptId();
 

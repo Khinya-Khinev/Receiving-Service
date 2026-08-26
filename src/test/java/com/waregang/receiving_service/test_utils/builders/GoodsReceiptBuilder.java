@@ -12,6 +12,7 @@ public class GoodsReceiptBuilder {
     private UUID managerId = UUID.randomUUID();
     private UUID inboundDeliveryId = UUID.randomUUID();
     private String warehouseId = "WH-001";
+    private ReceivingMode receivingMode = ReceivingMode.ASN_MATCHING;
 
     public static GoodsReceiptBuilder aGoodsReceipt() {
         return new GoodsReceiptBuilder();
@@ -49,7 +50,7 @@ public class GoodsReceiptBuilder {
 
     public GoodsReceipt build() {
         return GoodsReceipt.reconstitute(
-                id, status, gateNumber, managerId, inboundDeliveryId, warehouseId
+                id, status, gateNumber, managerId, inboundDeliveryId, warehouseId, receivingMode
         );
     }
 

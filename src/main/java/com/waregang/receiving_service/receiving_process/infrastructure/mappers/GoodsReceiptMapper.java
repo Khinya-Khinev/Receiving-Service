@@ -8,15 +8,14 @@ import org.springframework.stereotype.Component;
 public class GoodsReceiptMapper {
 
     public GoodsReceipt toDomain(GoodsReceiptJpa jpa) {
-        // The fields receivingMode and asnNumber are not persisted in GoodsReceiptJpa,
-        // so they are not mapped here. They are only used for creating domain events.
         return GoodsReceipt.reconstitute(
                 jpa.getId(),
                 jpa.getStatus(),
                 jpa.getGateNumber(),
                 jpa.getManagerId(),
                 jpa.getAsnId(),
-                jpa.getWarehouseId()
+                jpa.getWarehouseId(),
+                jpa.getReceivingMode()
         );
     }
 
@@ -27,7 +26,8 @@ public class GoodsReceiptMapper {
                 domain.getGateNumber(),
                 domain.getManagerId(),
                 domain.getInboundDeliveryId(),
-                domain.getWarehouseId()
+                domain.getWarehouseId(),
+                domain.getReceivingMode()
         );
     }
 
@@ -35,5 +35,6 @@ public class GoodsReceiptMapper {
         jpa.setStatus(domain.getStatus());
         jpa.setGateNumber(domain.getGateNumber());
         jpa.setManagerId(domain.getManagerId());
+        jpa.setReceivingMode(domain.getReceivingMode());
     }
 }

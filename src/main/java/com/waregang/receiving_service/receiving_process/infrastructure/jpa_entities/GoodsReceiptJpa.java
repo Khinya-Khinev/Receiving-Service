@@ -1,6 +1,7 @@
 package com.waregang.receiving_service.receiving_process.infrastructure.jpa_entities;
 
 import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceiptStatus;
+import com.waregang.receiving_service.receiving_process.domain.model.ReceivingMode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,13 +40,17 @@ public class GoodsReceiptJpa implements Persistable<UUID> {
     @Column(name = "warehouse_id")
     private String warehouseId;
 
+    @Column(name = "receiving_mode", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private ReceivingMode receivingMode;
 
     private GoodsReceiptJpa(UUID id,
                             GoodsReceiptStatus status,
                             String gateNumber,
                             UUID managerId,
                             UUID asnId,
-                            String warehouseId
+                            String warehouseId,
+                            ReceivingMode receivingMode
     ) {
         this.id = id;
         this.status = status;
@@ -53,10 +58,11 @@ public class GoodsReceiptJpa implements Persistable<UUID> {
         this.managerId = managerId;
         this.asnId = asnId;
         this.warehouseId = warehouseId;
+        this.receivingMode = receivingMode;
     }
 
-    public static GoodsReceiptJpa fromDomain(UUID id, GoodsReceiptStatus status, String gateNumber, UUID managerId, UUID inboundDeliveryId, String warehouseId) {
-        return new GoodsReceiptJpa(id, status, gateNumber, managerId, inboundDeliveryId, warehouseId);
+    public static GoodsReceiptJpa fromDomain(UUID id, GoodsReceiptStatus status, String gateNumber, UUID managerId, UUID inboundDeliveryId, String warehouseId, ReceivingMode receivingMode) {
+        return new GoodsReceiptJpa(id, status, gateNumber, managerId, inboundDeliveryId, warehouseId, receivingMode);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.waregang.receiving_service.common.exception_handling;
 import com.waregang.receiving_service.receiving_process.api.GoodsReceiptController;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingRequest;
 import com.waregang.receiving_service.receiving_process.application.GoodsReceiptService;
+import com.waregang.receiving_service.receiving_process.domain.model.ReceivingMode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,8 @@ public class ExceptionHandlingIT {
     private String givenStartReceivingJsonWithInvalidParams() {
         StartReceivingRequest request = new StartReceivingRequest(
                 null,
-                "");
+                "",
+                ReceivingMode.ASN_MATCHING);
         return jsonMapper.writeValueAsString(request);
     }
 }

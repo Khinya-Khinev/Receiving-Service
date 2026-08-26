@@ -23,12 +23,14 @@ public class GoodsReceipt extends AggregateRoot {
     private UUID managerId;
     private UUID inboundDeliveryId;
     private String warehouseId;
+    private ReceivingMode receivingMode;
 
     private GoodsReceipt(
             UUID managerId,
             UUID inboundDeliveryId,
             String warehouseId,
-            String gateNumber
+            String gateNumber,
+            ReceivingMode receivingMode
     ) {
         this.id = IdGenerator.generate();
         this.status = GoodsReceiptStatus.OPEN;
@@ -36,6 +38,7 @@ public class GoodsReceipt extends AggregateRoot {
         this.inboundDeliveryId = inboundDeliveryId;
         this.warehouseId = warehouseId;
         this.gateNumber = gateNumber;
+        this.receivingMode = receivingMode;
     }
 
     public static GoodsReceipt open(
@@ -46,7 +49,7 @@ public class GoodsReceipt extends AggregateRoot {
             String asnNumber,           // Passed for the event
             String gateNumber
     ) {
-        GoodsReceipt receipt = new GoodsReceipt(managerId, inboundDeliveryId, warehouseId, gateNumber);
+        GoodsReceipt receipt = new GoodsReceipt(managerId, inboundDeliveryId, warehouseId, gateNumber, receivingMode);
         receipt.registerOpenedEvent(asnNumber, receivingMode);
         return receipt;
     }
@@ -57,7 +60,8 @@ public class GoodsReceipt extends AggregateRoot {
             String gateNumber,
             UUID managerId,
             UUID inboundDeliveryId,
-            String warehouseId
+            String warehouseId,
+            ReceivingMode receivingMode
     ) {
         GoodsReceipt receipt = new GoodsReceipt();
         receipt.id = id;
@@ -66,6 +70,7 @@ public class GoodsReceipt extends AggregateRoot {
         receipt.managerId = managerId;
         receipt.inboundDeliveryId = inboundDeliveryId;
         receipt.warehouseId = warehouseId;
+        receipt.receivingMode = receivingMode;
         return receipt;
     }
 
