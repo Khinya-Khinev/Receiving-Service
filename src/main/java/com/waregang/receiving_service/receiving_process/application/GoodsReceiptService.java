@@ -2,8 +2,9 @@ package com.waregang.receiving_service.receiving_process.application;
 
 import com.waregang.receiving_service.common.exception_handling.AppException;
 import com.waregang.receiving_service.common.exception_handling.error_code.ReceivingErrorCode;
-import com.waregang.receiving_service.receiving_process.api.dto.GetOpenedReceiptsResponse;
 import com.waregang.receiving_service.receiving_process.api.dto.GoodsReceiptDetailsResponse;
+import com.waregang.receiving_service.receiving_process.api.dto.ReceivedContentDto;
+import com.waregang.receiving_service.receiving_process.api.dto.ReceivedUnitDto;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingRequest;
 import com.waregang.receiving_service.receiving_process.api.dto.StartReceivingResponse;
 import com.waregang.receiving_service.receiving_process.domain.dto.GoodsReceiptDto;
@@ -126,26 +127,24 @@ public class GoodsReceiptService {
 
         List<ReceivedUnit> units = receivedUnitRepositoryPort.findAllByReceiptId(receiptId);
 
-        // The DTOs from the other context are still used here.
-        // I will leave them for now as requested.
-        List<com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateUnitRequest> unitRequests = units.stream()
-                .map(unit -> new com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateUnitRequest(
+        List<ReceivedUnitDto> unitDtos = units.stream()
+                .map(unit -> new ReceivedUnitDto(
                         "DEFAULT",
                         unit.getLpn(),
                         unit.getParentUnitId() != null ? findLpnById(unit.getParentUnitId(), units) : null
                 ))
                 .toList();
 
-        List<com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateContentRequest> contentRequests = units.stream()
+        List<ReceivedContentDto> contentDtos = units.stream()
                 .flatMap(unit -> unit.getContents().stream())
-                .map(content -> new com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateContentRequest(
+                .map(content -> new ReceivedContentDto(
                         findLpnById(content.getContainerUnitId(), units),
                         content.getSku(),
                         content.getQuantity()
                 ))
                 .toList();
 
-        return new GoodsReceiptDetailsResponse(unitRequests, contentRequests);
+        return new GoodsReceiptDetailsResponse(unitDtos, contentDtos);
     }
 
     private String findLpnById(UUID id, List<ReceivedUnit> units) {

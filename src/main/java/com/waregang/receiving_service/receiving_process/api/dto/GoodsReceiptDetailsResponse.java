@@ -1,11 +1,11 @@
 package com.waregang.receiving_service.receiving_process.api.dto;
 
-import com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateContentRequest;
-import com.waregang.receiving_service.advanced_shipping_notice.api.dto.CreateUnitRequest;
+import com.waregang.receiving_service.receiving_process.api.dto.ReceivedContentDto;
+import com.waregang.receiving_service.receiving_process.api.dto.ReceivedUnitDto;
 
 import java.util.List;
 
 public record GoodsReceiptDetailsResponse(
-        List<CreateUnitRequest> units,
-        List<CreateContentRequest> contents
+        List<ReceivedUnitDto> units,
+        List<ReceivedContentDto> contents
 ) {}
