@@ -52,6 +52,18 @@ public class ProblemDetailSimpleFactory {
         String code = errorCode.getCode();
         String message = messageSource.getMessage(code, null, code, LocaleContextHolder.getLocale());
 
+        if (errorCode.getHttpStatus() == HttpStatus.BAD_REQUEST && !ex.getErrorContext().isEmpty()) {
+            Map<String, String> errors = ex.getErrorContext().entrySet().stream()
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            e -> String.valueOf(e.getValue())
+                    ));
+
+            ProblemDetail pd = buildValidationPD(errors);
+
+            return pd;
+        }
+
         ProblemDetail pd = baseProblemDetail(
                 errorCode.getHttpStatus(),
                 message,
@@ -60,8 +72,9 @@ public class ProblemDetailSimpleFactory {
 
         pd.setProperty("error_code", code);
 
-        if (!ex.getErrorContext().isEmpty() && pd.getProperties() != null)
+        if (!ex.getErrorContext().isEmpty() && pd.getProperties() != null) {
             pd.getProperties().putAll(ex.getErrorContext());
+        }
 
         return pd;
     }
@@ -103,32 +116,32 @@ public class ProblemDetailSimpleFactory {
      * (bad UUID, bad enum, bad date string) and for converter-side bugs. Only the
      * former is a 400 - anything else is a real server error.
      */
-    public ProblemDetail create(MethodArgumentTypeMismatchException ex) {
-        Throwable cause = ex.getMostSpecificCause();
-
-        if (!isSimpleConversionFailure(cause)) {
-            log.error("Unexpected failure converting parameter '{}' with value '{}'",
-                    ex.getName(), safeValue(ex), ex);
-            return baseProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Server Error", ":(");
-        }
-
-        String requiredType = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "expected type";
-        String message = "Invalid value '%s' for parameter '%s', expected %s"
-                .formatted(safeValue(ex), ex.getName(), requiredType);
-
-        return buildValidationPD(Map.of(ex.getName(), message));
-    }
-
-    private boolean isSimpleConversionFailure(Throwable cause) {
-        return cause instanceof IllegalArgumentException
-                || cause instanceof NumberFormatException
-                || cause instanceof DateTimeParseException;
-    }
-
-    private String safeValue(MethodArgumentTypeMismatchException ex) {
-        Object value = ex.getValue();
-        return value != null ? value.toString() : "null";
-    }
+//    public ProblemDetail create(MethodArgumentTypeMismatchException ex) {
+//        Throwable cause = ex.getMostSpecificCause();
+//
+//        if (!isSimpleConversionFailure(cause)) {
+//            log.error("Unexpected failure converting parameter '{}' with value '{}'",
+//                    ex.getName(), safeValue(ex), ex);
+//            return baseProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Server Error", ":(");
+//        }
+//
+//        String requiredType = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "expected type";
+//        String message = "Invalid value '%s' for parameter '%s', expected %s"
+//                .formatted(safeValue(ex), ex.getName(), requiredType);
+//
+//        return buildValidationPD(Map.of(ex.getName(), message));
+//    }
+//
+//    private boolean isSimpleConversionFailure(Throwable cause) {
+//        return cause instanceof IllegalArgumentException
+//                || cause instanceof NumberFormatException
+//                || cause instanceof DateTimeParseException;
+//    }
+//
+//    private String safeValue(MethodArgumentTypeMismatchException ex) {
+//        Object value = ex.getValue();
+//        return value != null ? value.toString() : "null";
+//    }
 
     public ProblemDetail create(Exception e) {
         return baseProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Server Error", ":(");
@@ -137,6 +150,7 @@ public class ProblemDetailSimpleFactory {
     private ProblemDetail buildValidationPD(Map<String, String> errors) {
         ProblemDetail pd = baseProblemDetail(HttpStatus.BAD_REQUEST, "Bad request", "Validation Error");
         pd.setProperty("invalid_params", errors);
+
         return pd;
     }
 
@@ -146,10 +160,14 @@ public class ProblemDetailSimpleFactory {
                         e -> e.getDefaultMessage() != null ? e.getDefaultMessage() : "Invalid value", this::mergeMessages));
     }
 
+    // Динамически очищаем путь от префиксов методов (например, getAsnsWithFilters.fromDate -> fromDate)
     private Map<String, String> extractErrors(ConstraintViolationException ex) {
         return ex.getConstraintViolations().stream()
                 .collect(Collectors.toMap(
-                        v -> v.getPropertyPath().toString(),
+                        v -> {
+                            String path = v.getPropertyPath().toString();
+                            return path.contains(".") ? path.substring(path.lastIndexOf('.') + 1) : path;
+                        },
                         ConstraintViolation::getMessage,
                         this::mergeMessages
                 ));

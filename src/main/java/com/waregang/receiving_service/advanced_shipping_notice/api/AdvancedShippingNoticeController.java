@@ -108,7 +108,7 @@ public class AdvancedShippingNoticeController {
         sort.forEach(order -> {
             if (!ALLOWED_SORT_PROPERTIES.contains(order.getProperty())) {
                 throw AppException.of(ValidationErrorCode.INVALID_SORT_PROPERTY)
-                        .with("invalid_property", order.getProperty());
+                        .with("sort", "Property '" + order.getProperty() + "' is not allowed");
             }
         });
     }
@@ -116,7 +116,8 @@ public class AdvancedShippingNoticeController {
     private void validateDateRange(LocalDateTime fromDate, LocalDateTime toDate) {
         if (fromDate != null && toDate != null && fromDate.isAfter(toDate)) {
             throw AppException.of(ValidationErrorCode.INVALID_DATE_RANGE)
-                    .with("invalid_date", "toDate must be after fromDate");
+                    .with("toDate", "toDate must be after fromDate");
         }
     }
+
 }
