@@ -10,12 +10,12 @@ public enum ValidationErrorCode implements ErrorCode{
 
     @Override
     public HttpStatus getHttpStatus() {
-        return null;
+        return httpStatus;
     }
 
     @Override
     public String getCode() {
-        return "";
+        return code;
     }
 
     private final HttpStatus httpStatus;
