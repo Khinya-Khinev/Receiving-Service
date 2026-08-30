@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 
 @Profile("!test")
+
 @EnableWebSecurity
 @EnableMethodSecurity
 @Configuration

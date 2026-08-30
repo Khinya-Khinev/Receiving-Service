@@ -13,7 +13,7 @@ import com.waregang.receiving_service.advanced_shipping_notice.infrastructure.jp
 import com.waregang.receiving_service.advanced_shipping_notice.infrastructure.jpa_repositories.HandlingUnitRepositoryJpa;
 import com.waregang.receiving_service.advanced_shipping_notice.api.dto.AsnFilters;
 import com.waregang.receiving_service.advanced_shipping_notice.api.dto.AsnResponse;
-import jakarta.persistence.criteria.Predicate;
+import com.waregang.receiving_service.advanced_shipping_notice.infrastructure.specifications.AdvancedShippingNoticeSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,9 +22,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.waregang.receiving_service.advanced_shipping_notice.infrastructure.specifications.AdvancedShippingNoticeSpecification.*;
 
 @RequiredArgsConstructor
 @Service
@@ -120,30 +121,13 @@ public class AdvancedShippingNoticeService {
             Pageable pageable,
             AsnFilters filters
     ) {
-        Specification<AdvancedShippingNoticeJpa> spec = buildSpecification(filters);
+        var spec = Specification
+                .where(expectedArrivalAfter(filters.fromDate()))
+                .and(expectedArrivalBefore(filters.toDate()))
+                .and(hasStatus(filters.status()))
+                .and(hasVendorName(filters.vendorName()));
 
         return asnRepository.findAll(spec, pageable)
                 .map(mapper::toAsnResponse);
-    }
-
-    private Specification<AdvancedShippingNoticeJpa> buildSpecification(AsnFilters filters) {
-        return (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (filters.fromDate() != null) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("arrivalDate").get("expected"), filters.fromDate()));
-            }
-            if (filters.toDate() != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("arrivalDate").get("expected"), filters.toDate()));
-            }
-            if (filters.status() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("status"), filters.status()));
-            }
-            if (filters.vendorName() != null && !filters.vendorName().isEmpty()) {
-                predicates.add(criteriaBuilder.like(root.get("vendorName"), "%" + filters.vendorName() + "%"));
-            }
-
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
     }
 }

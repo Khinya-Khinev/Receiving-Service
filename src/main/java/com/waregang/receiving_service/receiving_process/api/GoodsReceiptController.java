@@ -7,8 +7,11 @@ import com.waregang.receiving_service.receiving_process.application.GoodsReceipt
 import com.waregang.receiving_service.receiving_process.domain.dto.GoodsReceiptDto;
 import com.waregang.receiving_service.receiving_process.domain.model.GoodsReceiptStatus;
 import com.waregang.receiving_service.security.UserPrincipal;
+import com.waregang.receiving_service.common.exception_handling.AppException;
+import com.waregang.receiving_service.common.exception_handling.error_code.ValidationErrorCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -28,6 +32,9 @@ import java.util.UUID;
 public class GoodsReceiptController {
 
     private final GoodsReceiptService service;
+
+    private static final Set<String> ALLOWED_SORT_PROPERTIES =
+            Set.of("status", "warehouseId", "gateNumber", "receivingMode", "arrivalTimeline.expecred", "arrivalTimeline.actual");
 
     @PostMapping
     @PreAuthorize("hasAuthority('MANAGER')")
@@ -55,7 +62,7 @@ public class GoodsReceiptController {
     @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('WORKER')")
     @GetMapping
     public ResponseEntity<Page<GoodsReceiptDto>> getGoodsReceipts(
-            @PageableDefault(
+            @ParameterObject @PageableDefault(
                     size = 10,
                     page = 0,
                     direction = Sort.Direction.DESC
@@ -67,7 +74,18 @@ public class GoodsReceiptController {
             @AuthenticationPrincipal
             UserPrincipal user
     ) {
+        validateSort(pageable.getSort());
+
         return ResponseEntity.ok(service.findGoodsReceipts(user, receiptStatus, pageable));
+    }
+
+    private void validateSort(Sort sort) {
+        sort.forEach(order -> {
+            if (!ALLOWED_SORT_PROPERTIES.contains(order.getProperty())) {
+                throw AppException.of(ValidationErrorCode.INVALID_SORT_PROPERTY)
+                        .with("invalid_property", order.getProperty());
+            }
+        });
     }
 
     @GetMapping("/{receipt-id}/received-units")

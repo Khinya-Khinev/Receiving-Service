@@ -18,7 +18,6 @@ import com.waregang.receiving_service.receiving_process.application.ports.GoodsR
 import com.waregang.receiving_service.receiving_process.application.ports.ReceivedUnitRepositoryPort;
 import com.waregang.receiving_service.receiving_process.application.ports.WorkerReceivingSessionRepositoryPort;
 import com.waregang.receiving_service.receiving_process.infrastructure.jpa_entities.GoodsReceiptJpa;
-import com.waregang.receiving_service.receiving_process.infrastructure.specifications.GoodsReceiptSpecification;
 import com.waregang.receiving_service.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -31,6 +30,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+
+import com.waregang.receiving_service.receiving_process.infrastructure.specifications.GoodsReceiptSpecification;
+
+import static com.waregang.receiving_service.receiving_process.infrastructure.specifications.GoodsReceiptSpecification.hasStatus;
+import static com.waregang.receiving_service.receiving_process.infrastructure.specifications.GoodsReceiptSpecification.hasWarehouseId;
 
 @RequiredArgsConstructor
 @Service
@@ -99,14 +103,11 @@ public class GoodsReceiptService {
     @Transactional(readOnly = true)
     public Page<GoodsReceiptDto> findGoodsReceipts(UserPrincipal user, GoodsReceiptStatus status, Pageable pageable) {
         var spec = Specification
-                .where(GoodsReceiptSpecification.hasStatus(status))
-                .and(GoodsReceiptSpecification.hasWarehouseId(user.warehouseId()));
+                .where(hasStatus(status))
+                .and(hasWarehouseId(user.warehouseId()));
 
         Page<GoodsReceiptJpa> receipts = goodsReceiptRepositoryPort.findAll(spec, pageable);
 
-        // N+1 issue here because we need ReceivingMode from ASN.
-        // For now, I will just return DTO without full ASN info if I cannot easily join.
-        // Or I can fetch ASN info.
         return receipts.map(jpa -> new GoodsReceiptDto(
                 jpa.getId(),
                 jpa.getStatus(),

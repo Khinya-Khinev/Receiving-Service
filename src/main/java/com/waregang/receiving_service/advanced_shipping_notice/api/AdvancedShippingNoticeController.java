@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,7 +41,8 @@ public class AdvancedShippingNoticeController {
     private final AdvancedShippingNoticeMapper mapper;
 
     private static final Set<String> ALLOWED_SORT_PROPERTIES =
-            Set.of("arrivalTimeline.expected", "status", "vendorName", "createdAt", "receivingMode");
+            Set.of("arrivalTimeline.expected", "arrivalTimeline.actual", "status", "vendorName", "receivingMode");
+    // mb I will try jpa metamodel lib for avoiding field names mismatch later
 
 
     @PreAuthorize("hasAuthority('MANAGER')")
@@ -55,7 +57,7 @@ public class AdvancedShippingNoticeController {
     @PreAuthorize("hasAuthority('MANAGER')")
     @GetMapping("/search")
     public ResponseEntity<Page<AsnResponse>> getAsnsWithFilters(
-            @PageableDefault(
+            @ParameterObject @PageableDefault(
                     size = 10,
                     page = 0,
                     direction = Sort.Direction.DESC,
