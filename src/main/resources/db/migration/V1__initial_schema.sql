@@ -1,22 +1,3 @@
--- =============================================
--- V1__init_schema.sql
--- =============================================
-
--- users
-create table if not exists users (
-                                     id           uuid         not null,
-                                     email        varchar(255) not null,
-                                     nickname     varchar(255) not null,
-                                     password     varchar(255) not null,
-                                     authority    varchar(255) not null,
-                                     warehouse_id varchar(255) not null,
-
-                                     constraint pk_users primary key (id),
-                                     constraint uq_users_email unique (email),
-                                     constraint chk_users_authority check (authority in ('BOX_CAT', 'BOX_MANAGER'))
-);
-
--- asn (бывшая inbound_deliveries, сразу с новыми колонками)
 create table if not exists asn (
                                    id                     uuid         not null,
                                    version                integer,
@@ -36,7 +17,6 @@ create table if not exists asn (
                                    constraint chk_asn_status check (status in ('EXPECTED', 'ARRIVED', 'CLOSED', 'CANCELLED'))
 );
 
--- handling_units (сразу с path)
 create table if not exists handling_units (
                                               id                   uuid         not null,
                                               inbound_delivery_id  uuid         not null,
@@ -57,7 +37,6 @@ create table if not exists handling_units (
 create index if not exists idx_handling_units_inbound_delivery_id on handling_units (inbound_delivery_id);
 create index if not exists idx_handling_units_parent_unit_id      on handling_units (parent_unit_id);
 
--- contents (quantity сразу BIGINT)
 create table if not exists contents (
                                         id                  uuid         not null,
                                         container_unit_id   uuid         not null,
@@ -71,7 +50,6 @@ create table if not exists contents (
 
 create index if not exists idx_contents_container_unit_id on contents (container_unit_id);
 
--- goods_receipts (сразу с warehouse_id, без FK на asn)
 create table if not exists goods_receipts (
                                               id                   uuid         not null,
                                               asn_id               uuid         not null,
@@ -79,15 +57,14 @@ create table if not exists goods_receipts (
                                               gate_number          varchar(255),
                                               receiving_status     varchar(255) not null,
                                               warehouse_id         varchar(255),
+                                              receiving_mode       varchar(255) not null,
 
                                               constraint pk_goods_receipts primary key (id)
-    -- FK на asn НЕТ, так как V3 её удалил
 );
 
 create index if not exists idx_goods_receipts_asn_id     on goods_receipts (asn_id);
 create index if not exists idx_goods_receipts_manager_id on goods_receipts (manager_id);
 
--- worker_receiving_sessions (без FK на inbound_delivery, receipt, worker, current_unit)
 create table if not exists worker_receiving_sessions (
                                                          id                              uuid         not null,
                                                          inbound_delivery_id             uuid         not null,
@@ -97,17 +74,17 @@ create table if not exists worker_receiving_sessions (
                                                          current_unit_lpn_path           varchar(255),
                                                          receiving_mode                  varchar(255) not null,
                                                          worker_receiving_session_status varchar(255) not null,
+                                                         started_at                      timestamp    not null default now(),
+                                                         completed_at                    timestamp,
 
                                                          constraint pk_worker_receiving_sessions primary key (id),
                                                          constraint uq_worker_active_session unique (worker_id, worker_receiving_session_status)
-    -- FK все удалены в V3, поэтому их тут нет
 );
 
 create index if not exists idx_wrs_inbound_delivery_id on worker_receiving_sessions (inbound_delivery_id);
 create index if not exists idx_wrs_worker_id           on worker_receiving_sessions (worker_id);
 create index if not exists idx_wrs_receipt_id          on worker_receiving_sessions (receipt_id);
 
--- received_handling_units (без FK на worker_receiving_sessions)
 create table if not exists received_handling_units (
                                                        id                           uuid         not null,
                                                        parent_id                    uuid,
@@ -119,14 +96,12 @@ create table if not exists received_handling_units (
                                                        constraint uq_receipt_lpn unique (receipt_id, lpn),
                                                        constraint fk_rhu_parent
                                                            foreign key (parent_id) references received_handling_units (id)
-    -- FK на worker_receiving_sessions удален в V3
 );
 
 create index if not exists idx_rhu_parent_id                  on received_handling_units (parent_id);
 create index if not exists idx_rhu_receipt_id                 on received_handling_units (receipt_id);
 create index if not exists idx_rhu_worker_receiving_session_id on received_handling_units (worker_receiving_session_id);
 
--- received_contents (quantity сразу BIGINT)
 create table if not exists received_contents (
                                                  id                uuid         not null,
                                                  container_unit_id uuid,
