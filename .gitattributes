@@ -1,0 +1,11 @@
+# Explicitly set default behavior to auto text conversion
+* text=auto
+
+# Force Unix LF line endings for scripts and wrappers everywhere (no leading slash)
+*.sh text eol=lf
+mvnw text eol=lf
+gradlew text eol=lf
+
+# Force Windows CRLF line endings for Windows-specific batch scripts
+*.cmd text eol=crlf
+*.bat text eol=crlf
