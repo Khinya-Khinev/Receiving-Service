@@ -45,11 +45,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest(properties = {
-        "spring.autoconfigure.exclude=" +
-                "org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration," +
-                "org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration"
-})
+@SpringBootTest
 public class FullReceivingProcessIT extends BaseIT {
 
     @Autowired private GoodsReceiptService goodsReceiptService;

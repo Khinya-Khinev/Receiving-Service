@@ -48,7 +48,7 @@ class AdvancedShippingNoticeControllerTest {
                   "asnNumber": "asn1",
                   "warehouseId": "wh1",
                   "vendorName": "vendor1",
-                  "expectedArrivalDate": "2026-09-27T10:00:00",
+                  "expectedArrivalDate": "2099-09-27T10:00:00",
                   "unitRequests": [
                     {
                       "type": "type1",
