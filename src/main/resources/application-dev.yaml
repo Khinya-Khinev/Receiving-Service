@@ -20,6 +20,23 @@ spring:
         retry.backoff.ms: 1000
         spring.json.add.type.headers: false
 
+server:
+  port: 8080
+
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics"
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+
 springdoc:
   api-docs:
     path: /v3/api-docs/receiving-service # endpoint for gateway to get docs

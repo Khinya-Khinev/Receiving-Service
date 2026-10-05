@@ -1,6 +1,8 @@
 package com.waregang.receiving_service.security.configuration;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.health.actuate.endpoint.HealthEndpoint;
+import org.springframework.boot.security.autoconfigure.actuate.web.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -19,12 +21,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfiguration {
 
-    private static final String[] SWAGGER_WHITELIST = {
+    private static final String[] WHITELIST = {
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/swagger-resources/**",
-            "/swagger-resources",
-            "/actuator/**"
+            "/swagger-resources"
     };
 
     @Bean
@@ -37,7 +38,12 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(SWAGGER_WHITELIST).permitAll()
+                        .requestMatchers(WHITELIST)
+                        .permitAll()
+
+                        .requestMatchers(EndpointRequest.to(HealthEndpoint.class))
+                        .permitAll()
+
                         .anyRequest().authenticated()
                 )
 

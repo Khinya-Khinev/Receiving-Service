@@ -30,12 +30,6 @@ spring:
     problemdetails:
       enabled: true
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health
-
 logging:
   level:
     org.springframework.web: DEBUG
